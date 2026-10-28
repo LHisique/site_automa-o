@@ -13,14 +13,14 @@ Abra `index.html` no navegador. Se preferir um servidor local, rode `python -m h
 | Número de WhatsApp do formulário | `CONTATO.whatsapp` em `script.js` (só números, com DDI e DDD) |
 | E-mail de contato | `index.html` (seção de contato) e `privacidade.html` |
 | CPF/CNPJ e hospedagem | campos `[PREENCHER]` em `privacidade.html` |
+| Conversas da seção "Na prática" | `index.html`: cada `<ol class="chat">` é uma aba. A frase abaixo do celular fica nos atributos `data-forte` e `data-resto` |
 | Cores dos temas claro e escuro | variáveis no topo de `style.css` (`:root` e `:root[data-tema='escuro']`) |
 | Textos | `index.html` |
 
 ## Como funciona
 
 - **Tema claro e escuro:** segue o aparelho. O botão do topo (no celular, dentro do menu) troca o tema e guarda a escolha só no navegador (`localStorage`).
-- **"Confere cada link antes de sair":** a demonstração chama o `travarSaida` de `trava.js`, versão simplificada da trava usada nas automações. O teste dela é `node test_trava.js`.
-- **Exemplos de conversa:** são ilustrativos (nomes, horários e links fictícios) e a página avisa isso.
+- **Conversas de exemplo:** o celular do topo e o da seção "Na prática" mostram conversas de WhatsApp que se escrevem sozinhas. Em "Na prática", cada botão troca a conversa dentro do mesmo celular. São ilustrativas (nomes, horários e valores fictícios) e a página avisa isso.
 - **Formulário:** monta uma mensagem e abre o WhatsApp. Nada passa por este site.
 
 ## Publicar

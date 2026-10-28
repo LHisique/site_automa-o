@@ -29,7 +29,6 @@
     <symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
     <symbol id="i-escudo" viewBox="0 0 24 24"><path d="m12 3 7.5 2.8v5.7c0 4.4-3 7.8-7.5 9.5-4.5-1.7-7.5-5.1-7.5-9.5V5.8Z"/><path d="m8.7 12.2 2.2 2.2 4.4-4.6"/></symbol>
     <symbol id="i-ok" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
-    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6.5 6.5 11 11M17.5 6.5l-11 11"/></symbol>
     <symbol id="i-lua" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></symbol>
     <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
     <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 5.5h14A1.5 1.5 0 0 1 20.5 7v8.5A1.5 1.5 0 0 1 19 17h-8l-4.5 3.5V17H5a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 5 5.5Z"/></symbol>
@@ -45,7 +44,6 @@
       </a>
       <nav class="menu" aria-label="Seções">
         <a href="#pratica">Na prática</a>
-        <a href="#trava">Segurança</a>
         <a href="#processo">Como funciona</a>
         <a href="#sobre">Sobre</a>
       </nav>
@@ -55,10 +53,9 @@
         <summary><span class="sr">Menu</span><span class="barras" aria-hidden="true"></span></summary>
         <nav class="painel" aria-label="Seções (menu do celular)">
           <a href="#pratica" style="--i:0">Na prática</a>
-          <a href="#trava" style="--i:1">Segurança</a>
-          <a href="#processo" style="--i:2">Como funciona</a>
-          <a href="#sobre" style="--i:3">Sobre</a>
-          <button type="button" class="tema-linha" data-tema-botao aria-pressed="false" style="--i:4">Modo escuro<span class="chave" aria-hidden="true"></span></button>
+          <a href="#processo" style="--i:1">Como funciona</a>
+          <a href="#sobre" style="--i:2">Sobre</a>
+          <button type="button" class="tema-linha" data-tema-botao aria-pressed="false" style="--i:3">Modo escuro<span class="chave" aria-hidden="true"></span></button>
         </nav>
       </details>
     </div>
@@ -68,11 +65,14 @@
     <section class="heroi" aria-labelledby="h-titulo">
       <div class="heroi-texto">
         <h1 id="h-titulo">Seu WhatsApp atendendo e vendendo 24&nbsp;horas, sem perder o controle.</h1>
-        <p class="lead">Eu crio automações com IA para empresas que vendem pelo WhatsApp: atendimento, recuperação de vendas e pós-compra.</p>
+        <p class="lead">Automação com IA para quem vende ou agenda pelo WhatsApp.</p>
         <div class="acoes">
           <a class="botao botao-cobalto" href="#contato">Quero uma conversa<span class="disco" aria-hidden="true"><svg class="ic"><use href="#i-chat"/></svg></span></a>
           <a class="botao botao-linha" href="#pratica">Ver na prática</a>
         </div>
+        <ul class="segmentos" aria-label="Tipos de negócio">
+          <li>Lojas</li><li>Clínicas</li><li>Imobiliárias</li><li>Cursos online</li><li>Academias</li><li>Restaurantes</li>
+        </ul>
         <p class="prova"><span class="ponto" aria-hidden="true"></span>Em produção, 24&nbsp;horas por dia, num negócio real.</p>
       </div>
 
@@ -81,8 +81,8 @@
           <div class="tela">
             <div class="zap-topo">
               <svg class="ic" aria-hidden="true"><use href="#i-voltar"/></svg>
-              <span class="avatar" aria-hidden="true">S</span>
-              <p class="zap-nome"><strong>Sua empresa</strong><small>conta comercial</small></p>
+              <span class="avatar" aria-hidden="true">L</span>
+              <p class="zap-nome"><strong>Loja online</strong><small>conta comercial</small></p>
               <svg class="ic" aria-hidden="true"><use href="#i-video"/></svg>
               <svg class="ic" aria-hidden="true"><use href="#i-fone"/></svg>
             </div>
@@ -115,16 +115,16 @@
                 <span class="app" aria-hidden="true"><svg class="ic"><use href="#i-chat"/></svg></span>
                 <div><p class="notif-linha"><strong>Marina</strong><span>23:47</span></p><p>Vocês entregam amanhã?</p></div>
               </div>
-              <p class="efeito"><strong>Ninguém respondeu até segunda.</strong> Quando a resposta chegou, a cliente já tinha comprado em outro lugar.</p>
+              <p class="efeito"><strong>Ninguém respondeu até segunda.</strong> Ela comprou em outro lugar.</p>
             </div></div>
           </li>
           <li data-revela style="--i:1">
             <div class="cartao"><div class="cartao-in">
               <div class="notif">
                 <span class="app" aria-hidden="true"><svg class="ic"><use href="#i-chat"/></svg></span>
-                <div><p class="notif-linha"><strong>Rafael</strong><span>ontem</span></p><p>Quanto custa o plano anual?</p></div>
+                <div><p class="notif-linha"><strong>Rafael</strong><span>ontem</span></p><p>Quanto custa o clareamento?</p></div>
               </div>
-              <p class="efeito"><strong>Perguntou o preço e sumiu.</strong> Ninguém voltou a falar com ele.</p>
+              <p class="efeito"><strong>Perguntou o preço e sumiu.</strong></p>
             </div></div>
           </li>
           <li data-revela style="--i:2">
@@ -133,158 +133,74 @@
                 <span class="app app-venda" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span>
                 <div><p class="notif-linha"><strong>Venda aprovada</strong><span>hoje</span></p><p>Camila acabou de comprar.</p></div>
               </div>
-              <p class="efeito"><strong>Comprou e não recebeu nem um “bem-vinda”.</strong> A dúvida do primeiro acesso virou reclamação.</p>
+              <p class="efeito"><strong>Comprou e não recebeu nada.</strong> Não sabe como entrar.</p>
             </div></div>
           </li>
         </ul>
       </div>
     </section>
 
-    <section id="pratica" class="secao secao-pratica" aria-labelledby="pr-titulo">
-      <div class="caixa" data-revela>
-        <h2 id="pr-titulo" class="cabeca">Veja como fica no WhatsApp do seu cliente</h2>
-        <p class="intro">Cada cena acima vira uma conversa que continua. Exemplos ilustrativos: nomes, horários e links são fictícios.</p>
-      </div>
+    <section id="pratica" class="secao" aria-labelledby="pr-titulo">
+      <div class="caixa pratica">
+        <div class="pratica-texto" data-revela>
+          <h2 id="pr-titulo" class="cabeca">Veja como fica no WhatsApp</h2>
+          <div class="abas" role="group" aria-label="Situações de exemplo">
+            <button type="button" data-aba aria-pressed="true"><strong>Quem sumiu</strong><small>Clínica odontológica</small></button>
+            <button type="button" data-aba aria-pressed="false"><strong>Equipe no comando</strong><small>Imobiliária</small></button>
+            <button type="button" data-aba aria-pressed="false"><strong>Boas-vindas</strong><small>Curso online</small></button>
+            <button type="button" data-aba aria-pressed="false"><strong>Cobrança</strong><small>Academia</small></button>
+            <button type="button" data-aba aria-pressed="false"><strong>Resumo da semana</strong><small>Para o dono</small></button>
+          </div>
+        </div>
 
-      <div class="trilho" role="region" aria-label="Exemplos de conversa" tabindex="0">
-        <figure class="exemplo" data-revela style="--i:0">
+        <div class="cartao vitrine" data-revela data-toca style="--i:1"><div class="cartao-in">
           <div class="celular"><div class="tela">
             <div class="zap-topo">
               <svg class="ic" aria-hidden="true"><use href="#i-voltar"/></svg>
-              <span class="avatar" aria-hidden="true">S</span>
-              <p class="zap-nome"><strong>Sua empresa</strong><small>conta comercial</small></p>
+              <span class="avatar" aria-hidden="true">C</span>
+              <p class="zap-nome"><strong>Clínica</strong><small>conta comercial</small></p>
               <svg class="ic" aria-hidden="true"><use href="#i-video"/></svg>
               <svg class="ic" aria-hidden="true"><use href="#i-fone"/></svg>
             </div>
-            <ol class="chat" aria-label="Conversa de exemplo: cliente que sumiu">
+            <ol class="chat" aria-label="Conversa de exemplo: cliente que sumiu" data-inicial="C" data-nome="Clínica" data-forte="Quem sumiu volta para a conversa." data-resto="Sem você insistir.">
               <li class="msg sistema">Terça-feira</li>
-              <li class="msg eu cauda">Quanto custa o plano anual?<span class="meta">15:02<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
-              <li class="msg ele cauda">O anual sai mais em conta que o mensal. Quer que eu mande o link?<span class="meta">15:02</span></li>
+              <li class="msg eu cauda">Quanto custa o clareamento?<span class="meta">15:02<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
+              <li class="msg ele cauda">Oi! O valor depende da avaliação. Quer que eu explique como funciona?<span class="meta">15:02</span></li>
               <li class="msg sistema">Quinta-feira</li>
-              <li class="msg ele cauda">Oi! Ficou alguma dúvida sobre o plano anual? Se quiser, mando o link agora.<span class="meta">10:00</span></li>
-              <li class="msg eu cauda">Quero sim, obrigado por lembrar!<span class="meta">10:12<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
+              <li class="msg ele cauda">Oi! Ficou alguma dúvida sobre o clareamento? Estou por aqui.<span class="meta">10:00</span></li>
+              <li class="msg eu cauda">Ficou sim! Pode me explicar?<span class="meta">10:12<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
             </ol>
-            <div class="zap-base" aria-hidden="true">
-              <span class="campo"><svg class="ic"><use href="#i-mais"/></svg>Mensagem</span>
-              <span class="mic"><svg class="ic"><use href="#i-mic"/></svg></span>
-            </div>
-          </div></div>
-          <figcaption><h3>Quem sumiu volta para a conversa</h3><p>Perguntou o preço e não respondeu mais? A IA retoma o contato com no máximo duas mensagens, sem insistir.</p></figcaption>
-        </figure>
-
-        <figure class="exemplo" data-revela style="--i:1">
-          <div class="celular"><div class="tela">
-            <div class="zap-topo">
-              <svg class="ic" aria-hidden="true"><use href="#i-voltar"/></svg>
-              <span class="avatar" aria-hidden="true">S</span>
-              <p class="zap-nome"><strong>Sua empresa</strong><small>conta comercial</small></p>
-              <svg class="ic" aria-hidden="true"><use href="#i-video"/></svg>
-              <svg class="ic" aria-hidden="true"><use href="#i-fone"/></svg>
-            </div>
-            <ol class="chat" aria-label="Conversa de exemplo: a equipe assume">
-              <li class="msg eu cauda">Meu pedido veio errado.<span class="meta">14:20<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
-              <li class="msg ele cauda">Sinto muito pelo transtorno! Pode me contar o que veio errado?<span class="meta">14:20</span></li>
-              <li class="msg eu cauda">Veio o produto trocado e preciso resolver hoje.<span class="meta">14:21<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
-              <li class="msg sistema aviso">Júlia, da equipe, entrou na conversa. A IA fica em silêncio.</li>
-              <li class="msg ele cauda"><strong class="quem">Júlia, da equipe</strong>Oi! Aqui é a Júlia. Vou resolver isso agora.<span class="meta">14:22</span></li>
+            <ol class="chat" hidden aria-label="Conversa de exemplo: a equipe assume" data-inicial="I" data-nome="Imobiliária" data-forte="Sua equipe entra, a IA sai de cena." data-resto="Você no controle.">
+              <li class="msg eu cauda">Quero visitar o apartamento do anúncio.<span class="meta">14:20<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
+              <li class="msg ele cauda">Boa! Qual dia fica melhor para você?<span class="meta">14:20</span></li>
+              <li class="msg eu cauda">Amanhã à tarde. Posso falar com um corretor?<span class="meta">14:21<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
+              <li class="msg sistema aviso">Carla, da equipe, entrou na conversa. A IA fica em silêncio.</li>
+              <li class="msg ele cauda"><strong class="quem">Carla, da equipe</strong>Oi! Sou a Carla. Vou confirmar a visita agora.<span class="meta">14:22</span></li>
             </ol>
-            <div class="zap-base" aria-hidden="true">
-              <span class="campo"><svg class="ic"><use href="#i-mais"/></svg>Mensagem</span>
-              <span class="mic"><svg class="ic"><use href="#i-mic"/></svg></span>
-            </div>
-          </div></div>
-          <figcaption><h3>Quando a equipe entra, a IA se cala</h3><p>Se alguém da sua equipe assume a conversa, a IA fica em silêncio e deixa a pessoa trabalhar.</p></figcaption>
-        </figure>
-
-        <figure class="exemplo" data-revela style="--i:2">
-          <div class="celular"><div class="tela">
-            <div class="zap-topo">
-              <svg class="ic" aria-hidden="true"><use href="#i-voltar"/></svg>
-              <span class="avatar" aria-hidden="true">S</span>
-              <p class="zap-nome"><strong>Sua empresa</strong><small>conta comercial</small></p>
-              <svg class="ic" aria-hidden="true"><use href="#i-video"/></svg>
-              <svg class="ic" aria-hidden="true"><use href="#i-fone"/></svg>
-            </div>
-            <ol class="chat" aria-label="Conversa de exemplo: boas-vindas depois da compra">
+            <ol class="chat" hidden aria-label="Conversa de exemplo: boas-vindas depois da compra" data-inicial="C" data-nome="Curso online" data-forte="Comprou, recebeu." data-resto="Sem esperar por ninguém.">
               <li class="msg sistema">Hoje</li>
-              <li class="msg ele cauda">Parabéns pela compra, Camila! Seu acesso já está liberado: area.seusite.com.br<span class="meta">09:14</span></li>
+              <li class="msg ele cauda">Parabéns pela compra, Camila! Seu acesso já está liberado: <span class="link">area.seucurso.com.br</span><span class="meta">09:14</span></li>
               <li class="msg ele">Se tiver qualquer dúvida no primeiro acesso, é só responder aqui.<span class="meta">09:14</span></li>
               <li class="msg eu cauda">Recebi! Já vou entrar. Obrigada!<span class="meta">09:20<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
             </ol>
-            <div class="zap-base" aria-hidden="true">
-              <span class="campo"><svg class="ic"><use href="#i-mais"/></svg>Mensagem</span>
-              <span class="mic"><svg class="ic"><use href="#i-mic"/></svg></span>
-            </div>
-          </div></div>
-          <figcaption><h3>Quem comprou recebe boas-vindas</h3><p>Compra aprovada, mensagem enviada. Mesmo que o aviso de compra chegue duas vezes, o cliente recebe uma só.</p></figcaption>
-        </figure>
-
-        <figure class="exemplo" data-revela style="--i:3">
-          <div class="celular"><div class="tela">
-            <div class="zap-topo">
-              <svg class="ic" aria-hidden="true"><use href="#i-voltar"/></svg>
-              <span class="avatar" aria-hidden="true">S</span>
-              <p class="zap-nome"><strong>Sua empresa</strong><small>conta comercial</small></p>
-              <svg class="ic" aria-hidden="true"><use href="#i-video"/></svg>
-              <svg class="ic" aria-hidden="true"><use href="#i-fone"/></svg>
-            </div>
-            <ol class="chat" aria-label="Conversa de exemplo: cobrança de pagamento atrasado">
+            <ol class="chat" hidden aria-label="Conversa de exemplo: cobrança de mensalidade atrasada" data-inicial="A" data-nome="Academia" data-forte="Cobra sem constrangimento," data-resto="sempre com o link oficial.">
               <li class="msg sistema">Hoje</li>
               <li class="msg ele cauda">Oi, Paulo! A mensalidade deste mês ainda não foi confirmada. Se você já pagou, é só ignorar esta mensagem.<span class="meta">10:00</span></li>
-              <li class="msg ele">Para pagar, use o link oficial: <span class="link">pay.hotmart.com/PRODUTO-A</span><span class="meta">10:00</span></li>
+              <li class="msg ele">Para pagar, use o link oficial: <span class="link">suaacademia.com.br/pagar</span><span class="meta">10:00</span></li>
               <li class="msg eu cauda">Esqueci mesmo! Pago agora, valeu.<span class="meta">10:08<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg></span></li>
+            </ol>
+            <ol class="chat" hidden aria-label="Conversa de exemplo: resumo semanal para o dono" data-inicial="R" data-nome="Resumo semanal" data-sub="mensagem automática" data-forte="O que importa da semana," data-resto="no seu WhatsApp.">
+              <li class="msg sistema">Segunda-feira</li>
+              <li class="msg ele cauda"><strong class="quem">Resumo da semana</strong>Vendas: 14<br>Conversas atendidas: 96<br>Falhas: nenhuma<span class="meta">08:00</span></li>
             </ol>
             <div class="zap-base" aria-hidden="true">
               <span class="campo"><svg class="ic"><use href="#i-mais"/></svg>Mensagem</span>
               <span class="mic"><svg class="ic"><use href="#i-mic"/></svg></span>
             </div>
           </div></div>
-          <figcaption><h3>Cobrança sem constrangimento</h3><p>Uma mensagem gentil por pagamento atrasado, sempre com o caminho oficial para pagar.</p></figcaption>
-        </figure>
-      </div>
-
-      <p class="caixa nota" data-revela>Também envio um resumo semanal no seu WhatsApp: vendas, conversas atendidas pela IA, respostas barradas e falhas da semana.</p>
-    </section>
-
-    <section id="trava" class="secao-palco" aria-labelledby="t-titulo">
-      <div class="palco-escuro">
-        <div class="trava-texto" data-revela>
-          <h2 id="t-titulo" class="cabeca">Minha automação confere cada link antes de sair.</h2>
-          <p>A IA conversa muito bem, mas às vezes inventa: um produto, um preço, um link que parece certo e não existe. Por isso, antes de qualquer resposta chegar ao seu cliente, um código confere se os links estão na sua lista oficial.</p>
-          <p>Escolha uma situação e veja o que acontece nos bastidores.</p>
-          <div class="casos" role="group" aria-label="Situações para testar">
-            <button type="button" data-caso="correto" aria-pressed="false"><span class="sel sel-ok" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span>A IA acerta o link</button>
-            <button type="button" data-caso="inventado" aria-pressed="true"><span class="sel sel-x" aria-hidden="true"><svg class="ic"><use href="#i-x"/></svg></span>A IA inventa um link</button>
-            <button type="button" data-caso="misto" aria-pressed="false"><span class="sel sel-x" aria-hidden="true"><svg class="ic"><use href="#i-x"/></svg></span>Um link certo e outro errado</button>
-          </div>
-        </div>
-
-        <div class="trava-demo" id="trava-demo" data-toca>
-          <div class="celular"><div class="tela">
-            <div class="zap-topo">
-              <svg class="ic" aria-hidden="true"><use href="#i-voltar"/></svg>
-              <span class="avatar" aria-hidden="true">S</span>
-              <p class="zap-nome"><strong>Sua empresa</strong><small>conta comercial</small></p>
-              <svg class="ic" aria-hidden="true"><use href="#i-video"/></svg>
-              <svg class="ic" aria-hidden="true"><use href="#i-fone"/></svg>
-            </div>
-            <ol class="chat" id="trava-chat" aria-label="O que o cliente vê"></ol>
-            <div class="zap-base" aria-hidden="true">
-              <span class="campo"><svg class="ic"><use href="#i-mais"/></svg>Mensagem</span>
-              <span class="mic"><svg class="ic"><use href="#i-mic"/></svg></span>
-            </div>
-          </div></div>
-
-          <div class="bastidor" role="group" aria-labelledby="bast-t">
-            <h3 id="bast-t">Nos bastidores</h3>
-            <dl>
-              <div data-mostra="2"><dt>A IA escreveu</dt><dd><q id="b-rascunho"></q></dd></div>
-              <div data-mostra="3"><dt>A conferência</dt><dd id="b-veredito" class="veredito"><svg class="ic" aria-hidden="true"><use id="b-icone" href="#i-ok"/></svg><span id="b-texto"></span></dd></div>
-            </dl>
-          </div>
-          <p class="sr" role="status" id="trava-status"></p>
-          <noscript><p class="legenda">Ative o JavaScript para testar a conferência neste exemplo.</p></noscript>
-        </div>
+          <p class="frase" aria-live="polite"><strong>Quem sumiu volta para a conversa.</strong> <span>Sem você insistir.</span></p>
+          <p class="legenda">Exemplos ilustrativos. Nomes, horários e valores são fictícios.</p>
+        </div></div>
       </div>
     </section>
 
@@ -292,23 +208,48 @@
       <div class="caixa processo">
         <div class="processo-topo" data-revela>
           <h2 id="pc-titulo" class="cabeca">Como começamos</h2>
-          <p class="intro">Você acompanha cada etapa e vê funcionando antes de liberar para os seus clientes.</p>
         </div>
         <ol class="passos">
-          <li data-revela style="--i:0"><span class="num">1</span><div><h3>Conversa inicial, sem custo</h3><p>Você conta como é o atendimento hoje. Eu digo se faz sentido automatizar e por onde eu começaria.</p></div></li>
+          <li data-revela style="--i:0"><span class="num">1</span><div><h3>Conversa inicial, sem custo</h3><p>Você conta como é hoje. Eu digo se vale a pena.</p></div></li>
           <li data-revela style="--i:1"><span class="num">2</span><div><h3>Proposta com preço fechado</h3><p>Custo previsível: você sabe quanto cada mensagem custa antes de começar.</p></div></li>
-          <li data-revela style="--i:2"><span class="num">3</span><div><h3>Teste com o seu número</h3><p>Você vê funcionando no seu próprio WhatsApp antes de liberar para os clientes.</p></div></li>
+          <li data-revela style="--i:2"><span class="num">3</span><div><h3>Teste com o seu número</h3><p>Você vê funcionando no seu WhatsApp antes de ir ao ar.</p></div></li>
         </ol>
       </div>
 
       <div class="caixa" data-revela>
         <h3 class="combinados-titulo">Meus combinados</h3>
         <ul class="combinados">
-          <li><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span><p><strong>Tudo pela API oficial do WhatsApp.</strong> Sem atalhos que ponham o seu número em risco.</p></li>
-          <li><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span><p><strong>Preço, prazo e link vêm da sua lista conferida,</strong> nunca da imaginação da IA.</p></li>
-          <li><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span><p><strong>Nada vai ao ar sem a sua autorização.</strong> Você decide o que liga, pausa ou desliga.</p></li>
-          <li><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span><p><strong>Se algo falhar, a sua equipe fica sabendo</strong> por uma mensagem no WhatsApp.</p></li>
+          <li><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span><p><strong>Só a API oficial,</strong> sem atalhos que arriscam o seu número.</p></li>
+          <li><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span><p><strong>Minha automação confere cada link</strong> antes de sair.</p></li>
+          <li><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span><p><strong>Nada vai ao ar</strong> sem a sua autorização.</p></li>
+          <li><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-ok"/></svg></span><p><strong>Falhou?</strong> Sua equipe é avisada no WhatsApp.</p></li>
         </ul>
+      </div>
+    </section>
+
+    <section id="duvidas" class="secao" aria-labelledby="d-titulo">
+      <div class="caixa processo">
+        <div class="processo-topo" data-revela>
+          <h2 id="d-titulo" class="cabeca">Dúvidas rápidas</h2>
+        </div>
+        <div class="duvidas" data-revela style="--i:1">
+          <details name="duvida">
+            <summary>A IA entende áudio?</summary>
+            <p>Sim. Ela transcreve o áudio e responde.</p>
+          </details>
+          <details name="duvida">
+            <summary>E se a IA errar?</summary>
+            <p>Ela só usa preço, prazo e link da sua lista, e a automação confere cada link antes de sair. O que não estiver na lista, ela confirma com a equipe.</p>
+          </details>
+          <details name="duvida">
+            <summary>Posso assumir uma conversa?</summary>
+            <p>Pode. Quando alguém da equipe responde, a IA se cala.</p>
+          </details>
+          <details name="duvida">
+            <summary>Quanto custa?</summary>
+            <p>Preço fechado na proposta. O custo por mensagem da API oficial você vê antes de começar.</p>
+          </details>
+        </div>
       </div>
     </section>
 
@@ -317,8 +258,7 @@
         <div class="retrato" aria-hidden="true">LI</div>
         <div>
           <h2 id="s-titulo" class="cabeca">Quem vai cuidar do seu atendimento</h2>
-          <p>Sou Luís Isique e crio automações de WhatsApp com IA. Cuido do projeto do começo ao fim: entendo o seu atendimento, monto a automação e testo com o seu número antes de liberar para os clientes.</p>
-          <p>Para mim, automação boa é a que o cliente nem percebe: ele só é bem atendido. E quem decide o que vai ao ar é sempre o dono do negócio.</p>
+          <p>Sou Luís Isique e crio automações de WhatsApp com IA. Cuido do projeto do começo ao fim, e quem decide o que vai ao ar é você.</p>
         </div>
       </div>
     </section>
@@ -327,7 +267,7 @@
       <div class="palco-cobalto">
         <div class="contato-texto" data-revela>
           <h2 id="c-titulo" class="cabeca">Quer ver isso no seu WhatsApp?</h2>
-          <p>Conte o que acontece hoje no seu atendimento. Respondo dizendo se faz sentido automatizar e por onde eu começaria.</p>
+          <p>Conte o que acontece hoje. Eu respondo se vale a pena automatizar.</p>
           <p>Prefere e-mail? <a href="mailto:luis.isique2022@gmail.com">luis.isique2022@gmail.com</a></p>
         </div>
         <div class="cartao cartao-claro" data-revela style="--i:1"><form class="cartao-in contato" id="form-contato">
@@ -350,13 +290,12 @@
     </div>
     <details class="tecnico">
       <summary>Para quem é técnico</summary>
-      <p><strong>Ferramentas:</strong> n8n, API oficial do WhatsApp, OpenAI (gpt-4o-mini e Whisper), Redis, PostgreSQL, Docker, Caddy, webhooks da Hotmart, JavaScript e Python.</p>
+      <p><strong>Ferramentas:</strong> n8n, API oficial do WhatsApp, OpenAI (gpt-4o-mini e Whisper), Redis, PostgreSQL, Docker, Caddy, webhooks de plataformas de pagamento, JavaScript e Python.</p>
       <p><strong>A conferência de links:</strong> toda resposta da IA passa por um trecho de código antes de sair. Se houver um link de um domínio vigiado que não esteja na lista oficial, a resposta inteira é trocada por uma frase segura. É a única camada que não depende de o modelo obedecer ao prompt.</p>
       <p><strong>Testes:</strong> cada fluxo tem um teste em Node que roda o código dos nós sem enviar nada. O teste real é uma mensagem do número da empresa para ele mesmo.</p>
     </details>
   </footer>
 
-  <script src="trava.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

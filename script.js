@@ -50,14 +50,14 @@ aoEntrar(document.querySelectorAll('[data-revela]'), .15, el => el.classList.add
 // data-mostra="N" faz um elemento aparecer quando N mensagens já estão na tela.
 async function tocar(fig) {
   const minha = fig.corrida = (fig.corrida || 0) + 1;
-  const chat = fig.querySelector('.chat');
+  const chat = fig.querySelector('.chat:not([hidden])');
   const ponto = Object.assign(document.createElement('li'), {
     className: 'msg ele digitando vista',
     innerHTML: '<i></i><i></i><i></i>',
   });
   ponto.setAttribute('aria-hidden', 'true');
 
-  for (const li of chat.querySelectorAll('.msg:not(.vista)')) {
+  for (const li of chat.querySelectorAll('.msg:not(.vista, .digitando)')) {
     const negocio = li.classList.contains('ele');
     if (negocio) li.before(ponto);
     await espera(negocio ? 800 + li.textContent.length * 10 : 600);
@@ -75,76 +75,32 @@ async function tocar(fig) {
   }
 }
 
-// Demonstração da conferência: usa o mesmo travarSaida do trava.js
-const CASOS = {
-  correto: {
-    pergunta: 'Quero fechar o plano anual. Qual é o link?',
-    rascunho: 'Claro! Aqui está o link do plano anual: https://pay.hotmart.com/PRODUTO-A',
-  },
-  inventado: {
-    pergunta: 'Vocês têm o curso avançado?',
-    rascunho: 'Temos sim! A inscrição é neste link: https://pay.hotmart.com/PRODUTO-C',
-  },
-  misto: {
-    pergunta: 'Me manda os links dos dois planos?',
-    rascunho: 'Claro! Mensal: https://pay.hotmart.com/PRODUTO-B e anual: https://pay.hotmart.com/PRODUTO-D',
-  },
-};
+// "Na prática": um celular, várias conversas. Cada <ol class="chat"> é uma aba.
+const vitrine = document.querySelector('.vitrine');
+const conversas = vitrine.querySelectorAll('.chat');
+const abas = document.querySelectorAll('[data-aba]');
+const inicial = vitrine.querySelector('.avatar');
+const nome = vitrine.querySelector('.zap-nome strong');
+const sub = vitrine.querySelector('.zap-nome small');
+const forte = vitrine.querySelector('.frase strong');
+const resto = vitrine.querySelector('.frase span');
 
-const demo = document.getElementById('trava-demo');
-const conversa = demo.querySelector('.chat');
-
-// Texto com os links em destaque; os barrados ficam riscados nos bastidores
-const partes = (texto, barrados = []) => texto.split(/(https?:\/\/[^\s)]+)/).map((parte, i) => {
-  if (i % 2 === 0) return document.createTextNode(parte);
-  const link = document.createElement('span');
-  link.className = barrados.includes(parte) ? 'link barrado' : 'link';
-  link.textContent = parte.replace(/^https?:\/\//, '');
-  return link;
-});
-
-function bolha(lado, texto, hora) {
-  const li = document.createElement('li');
-  li.className = `msg ${lado} cauda`;
-  const meta = document.createElement('span');
-  meta.className = 'meta';
-  meta.innerHTML = hora + (lado === 'eu' ? '<svg class="tique lido" aria-hidden="true"><use href="#i-tique"/></svg>' : '');
-  li.append(...partes(texto), meta);
-  return li;
-}
-
-function mostrar(chave) {
-  const { pergunta, rascunho } = CASOS[chave];
-  const { texto, bloqueadas } = travarSaida(rascunho);
-  const barrou = bloqueadas.length > 0;
-  const veredito = barrou
-    ? 'Link fora da lista oficial. Por segurança, a resposta inteira foi trocada.'
-    : 'Link na lista oficial. A resposta pode ser enviada.';
-
-  const hoje = Object.assign(document.createElement('li'), { className: 'msg sistema', textContent: 'Hoje' });
-  conversa.replaceChildren(hoje, bolha('eu', pergunta, '14:05'), bolha('ele', texto, '14:05'));
-  document.getElementById('b-rascunho').replaceChildren(...partes(rascunho, bloqueadas));
-  document.getElementById('b-veredito').className = 'veredito ' + (barrou ? 'barra' : 'ok');
-  document.getElementById('b-icone').setAttribute('href', barrou ? '#i-x' : '#i-ok');
-  document.getElementById('b-texto').textContent = veredito;
-  document.getElementById('trava-status').textContent = `${veredito} O cliente recebeu: ${texto.replace(/https?:\/\//g, '')}`;
-
-  demo.querySelectorAll('[data-mostra]').forEach(el => el.classList.toggle('vista', calmo));
-  if (calmo) conversa.querySelectorAll('.msg').forEach(msg => msg.classList.add('vista'));
-  else tocar(demo);
-}
-
-const botoes = document.querySelectorAll('[data-caso]');
-botoes.forEach(botao => botao.addEventListener('click', () => {
-  botoes.forEach(outro => outro.setAttribute('aria-pressed', outro === botao));
-  mostrar(botao.dataset.caso);
+// No celular as abas deslizam: o foco do teclado deixa a aba inteira à vista, com o contorno sem corte
+abas.forEach(aba => aba.addEventListener('focus', () => aba.scrollIntoView({ block: 'nearest', inline: 'nearest' })));
+abas.forEach((aba, i) => aba.addEventListener('click', () => {
+  abas.forEach(outra => outra.setAttribute('aria-pressed', outra === aba));
+  conversas.forEach((chat, j) => { chat.hidden = j !== i; });
+  const dados = conversas[i].dataset;
+  inicial.textContent = dados.inicial;
+  nome.textContent = dados.nome;
+  sub.textContent = dados.sub || 'conta comercial';
+  forte.textContent = dados.forte;
+  resto.textContent = dados.resto;
+  conversas[i].querySelectorAll('.msg').forEach(msg => msg.classList.remove('vista'));
+  if (!calmo) tocar(vitrine);
 }));
 
-if (calmo) mostrar('inventado');
-else {
-  aoEntrar([demo], .35, () => mostrar('inventado'));
-  aoEntrar(document.querySelectorAll('.palco[data-toca]'), .35, tocar);
-}
+if (!calmo) aoEntrar(document.querySelectorAll('[data-toca]'), .35, tocar);
 
 // Formulário de contato: monta a mensagem e abre o WhatsApp
 const aviso = document.getElementById('aviso-form');
