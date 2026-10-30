@@ -21,7 +21,7 @@ const botoesTema = document.querySelectorAll('[data-tema-botao]');
 function sincronizarTema() {
   const escuro = raiz.dataset.tema === 'escuro';
   botoesTema.forEach(botao => botao.setAttribute('aria-pressed', escuro));
-  document.querySelectorAll('meta[name=theme-color]').forEach(meta => { meta.content = escuro ? '#070b1f' : '#f3f5fa'; });
+  document.querySelectorAll('meta[name=theme-color]').forEach(meta => { meta.content = escuro ? '#05081a' : '#f5f6fb'; });
 }
 sincronizarTema();
 botoesTema.forEach(botao => botao.addEventListener('click', () => {
