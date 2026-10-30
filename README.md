@@ -14,7 +14,7 @@ Abra `index.html` no navegador. Se preferir um servidor local, rode `python -m h
 | E-mail de contato | `index.html` (seção de contato) e `privacidade.html` |
 | CPF/CNPJ e hospedagem | campos `[PREENCHER]` em `privacidade.html` |
 | Conversas da seção "Na prática" | `index.html`: cada `<ol class="chat">` é uma aba. A frase abaixo do celular fica nos atributos `data-forte` e `data-resto` |
-| Faixa de negócios (abaixo do topo) | `index.html`, `.faixa`: edite as duas listas `<ul>` iguais; a segunda é cópia para o efeito de rolagem |
+| Tipos de negócio (no topo) | `index.html`, lista `.segmentos` dentro do `.heroi` |
 | Cartões que flutuam no celular do topo | `index.html`, `.flutua`: `data-mostra="N"` faz o cartão aparecer quando N mensagens já estão na tela |
 | Cores dos temas claro e escuro | variáveis no topo de `style.css` (`:root` e `:root[data-tema='escuro']`) |
 | Textos | `index.html` |

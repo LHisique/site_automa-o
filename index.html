@@ -68,12 +68,15 @@
     <section class="heroi" aria-labelledby="h-titulo">
       <div class="heroi-texto">
         <p class="prova entra" style="--i:0"><span class="ponto" aria-hidden="true"></span>Em produção, 24&nbsp;horas por dia, num negócio real.</p>
-        <h1 id="h-titulo" class="entra" style="--i:1">Seu WhatsApp atendendo e vendendo 24&nbsp;horas, sem perder o controle.</h1>
+        <h1 id="h-titulo" class="entra" style="--i:1">Seu <span class="destaque">WhatsApp</span> atendendo e vendendo 24&nbsp;horas, sem perder o controle.</h1>
         <p class="lead entra" style="--i:2">Automação com IA para quem vende ou agenda pelo WhatsApp.</p>
         <div class="acoes entra" style="--i:3">
           <a class="botao botao-cobalto" href="#contato">Quero uma conversa<span class="disco" aria-hidden="true"><svg class="ic"><use href="#i-chat"/></svg></span></a>
           <a class="botao botao-linha" href="#pratica">Ver na prática</a>
         </div>
+        <ul class="segmentos entra" style="--i:4" aria-label="Tipos de negócio">
+          <li>Lojas</li><li>Clínicas</li><li>Imobiliárias</li><li>Cursos online</li><li>Academias</li><li>Restaurantes</li>
+        </ul>
       </div>
 
       <figure class="palco entra" style="--i:2" data-toca>
@@ -108,22 +111,10 @@
       </figure>
     </section>
 
-    <section class="faixa" aria-label="Tipos de negócio">
-      <svg class="onda-borda" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 48V26C180 6 360 0 540 10s360 30 540 26 270-20 360-28v40Z"/></svg>
-      <div class="trilho">
-        <ul>
-          <li>Lojas</li><li>Clínicas</li><li>Imobiliárias</li><li>Cursos online</li><li>Academias</li><li>Restaurantes</li>
-        </ul>
-        <ul aria-hidden="true">
-          <li>Lojas</li><li>Clínicas</li><li>Imobiliárias</li><li>Cursos online</li><li>Academias</li><li>Restaurantes</li>
-        </ul>
-      </div>
-      <svg class="onda-borda onda-baixo" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0 48V26C180 6 360 0 540 10s360 30 540 26 270-20 360-28v40Z"/></svg>
-    </section>
 
     <section class="secao" aria-labelledby="p-titulo">
       <div class="caixa">
-        <h2 id="p-titulo" class="cabeca" data-revela>Reconhece alguma dessas cenas?</h2>
+        <h2 id="p-titulo" class="cabeca centro" data-revela>Reconhece alguma dessas cenas?</h2>
         <ul class="cenas">
           <li data-revela style="--i:0">
             <div class="cartao"><div class="cartao-in">
@@ -156,10 +147,10 @@
       </div>
     </section>
 
-    <section id="pratica" class="noite" aria-labelledby="pr-titulo">
+    <section id="pratica" class="secao secao-pratica" aria-labelledby="pr-titulo">
       <div class="caixa pratica">
         <div class="pratica-texto" data-revela>
-          <h2 id="pr-titulo" class="cabeca">Veja como fica no WhatsApp</h2>
+          <h2 id="pr-titulo" class="cabeca">Veja como fica no <span class="destaque">WhatsApp</span></h2>
           <div class="abas" role="group" aria-label="Situações de exemplo">
             <button type="button" data-aba aria-pressed="true"><strong>Quem sumiu</strong><small>Clínica odontológica</small></button>
             <button type="button" data-aba aria-pressed="false"><strong>Equipe no comando</strong><small>Imobiliária</small></button>
@@ -222,28 +213,26 @@
 
     <section id="processo" class="secao" aria-labelledby="pc-titulo">
       <div class="caixa">
-        <h2 id="pc-titulo" class="cabeca" data-revela>Como começamos</h2>
+        <h2 id="pc-titulo" class="cabeca centro" data-revela>Como começamos</h2>
         <ol class="passos">
           <li data-revela style="--i:0"><span class="num" aria-hidden="true">1</span><h3>Conversa inicial, sem custo</h3><p>Você conta como é hoje. Eu digo se vale a pena.</p></li>
           <li data-revela style="--i:1"><span class="num" aria-hidden="true">2</span><h3>Proposta com preço fechado</h3><p>Custo previsível: você sabe quanto cada mensagem custa antes de começar.</p></li>
           <li data-revela style="--i:2"><span class="num" aria-hidden="true">3</span><h3>Teste com o seu número</h3><p>Você vê funcionando no seu WhatsApp antes de ir ao ar.</p></li>
         </ol>
 
-        <h3 class="combinados-titulo" data-revela>Meus combinados</h3>
+        <h3 class="combinados-titulo centro" data-revela>Meus combinados</h3>
         <ul class="combinados">
-          <li class="combinado-destaque" data-revela style="--i:0"><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-escudo"/></svg></span><p><strong>Só a API oficial,</strong> sem atalhos que arriscam o seu número.</p></li>
+          <li data-revela style="--i:0"><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-escudo"/></svg></span><p><strong>Só a API oficial,</strong> sem atalhos que arriscam o seu número.</p></li>
           <li data-revela style="--i:1"><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-link"/></svg></span><p><strong>Minha automação confere cada link</strong> antes de sair.</p></li>
           <li data-revela style="--i:2"><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-cadeado"/></svg></span><p><strong>Nada vai ao ar</strong> sem a sua autorização.</p></li>
-          <li class="combinado-noite" data-revela style="--i:3"><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-sino"/></svg></span><p><strong>Falhou?</strong> Sua equipe é avisada no WhatsApp.</p></li>
+          <li data-revela style="--i:3"><span class="sel" aria-hidden="true"><svg class="ic"><use href="#i-sino"/></svg></span><p><strong>Falhou?</strong> Sua equipe é avisada no WhatsApp.</p></li>
         </ul>
       </div>
     </section>
 
     <section id="duvidas" class="secao secao-duvidas" aria-labelledby="d-titulo">
-      <div class="caixa lado">
-        <div class="lado-topo" data-revela>
-          <h2 id="d-titulo" class="cabeca">Dúvidas rápidas</h2>
-        </div>
+      <div class="caixa estreita">
+        <h2 id="d-titulo" class="cabeca centro" data-revela>Dúvidas rápidas</h2>
         <div class="duvidas" data-revela style="--i:1">
           <details name="duvida">
             <summary>A IA entende áudio?</summary>
@@ -278,7 +267,7 @@
     <section id="contato" class="secao-palco" aria-labelledby="c-titulo">
       <div class="palco-cobalto">
         <div class="contato-texto" data-revela>
-          <h2 id="c-titulo" class="cabeca">Quer ver isso no seu WhatsApp?</h2>
+          <h2 id="c-titulo" class="cabeca centro">Quer ver isso no seu <span class="destaque">WhatsApp</span>?</h2>
           <p>Conte o que acontece hoje. Eu respondo se vale a pena automatizar.</p>
           <p>Prefere e-mail? <a href="mailto:luis.isique2022@gmail.com">luis.isique2022@gmail.com</a></p>
         </div>
@@ -294,7 +283,7 @@
     </section>
   </main>
 
-  <footer class="rodape caixa">
+  <footer class="rodape"><div class="caixa">
     <div class="rodape-linha">
       <p class="rodape-marca"><span class="marca-bolha" aria-hidden="true"><svg class="ic"><use href="#i-chat"/></svg></span><span translate="no">© 2026 Luís Isique</span></p>
       <p>Site sem cookies e sem rastreamento.</p>
@@ -306,7 +295,7 @@
       <p><strong>A conferência de links:</strong> toda resposta da IA passa por um trecho de código antes de sair. Se houver um link de um domínio vigiado que não esteja na lista oficial, a resposta inteira é trocada por uma frase segura. É a única camada que não depende de o modelo obedecer ao prompt.</p>
       <p><strong>Testes:</strong> cada fluxo tem um teste em Node que roda o código dos nós sem enviar nada. O teste real é uma mensagem do número da empresa para ele mesmo.</p>
     </details>
-  </footer>
+  </div></footer>
 
   <script src="script.js"></script>
 </body>
