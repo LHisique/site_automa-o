@@ -302,6 +302,9 @@ input:focus, textarea:focus { outline: none; border-bottom-color: var(--acento);
   .palco { place-items: end center; padding-bottom: 12px; }
   .cena3d { transform-origin: 50% 100%; }
   .flutua { display: none; }
+  /* leve no celular: sem granulado animado nem desfoque de fundo, que travavam a GPU */
+  .grao { display: none; }
+  .notificacoes li { backdrop-filter: none; background: rgba(60,66,60,.72); }
   .passo { display: block; min-height: 135svh; padding: 0 var(--margem); }
   .passo-conteudo { display: block; position: sticky; top: var(--topo-texto, 72px); opacity: 0; visibility: hidden; transition: opacity .35s var(--ease), visibility 0s linear .35s; }
   .passo.ativo .passo-conteudo { opacity: 1; visibility: visible; transition: opacity .45s var(--ease); }
@@ -309,7 +312,7 @@ input:focus, textarea:focus { outline: none; border-bottom-color: var(--acento);
   .heroi .selo { margin-bottom: 14px; font-size: 11px; }
   .heroi-sub { margin-top: 14px; font-size: 16px; max-width: 30ch; }
   .heroi-botoes { margin-top: 18px; flex-wrap: nowrap; gap: 8px; }
-  .heroi-botoes .botao { padding: 12px 16px; font-size: 14px; white-space: nowrap; background: rgba(10,11,10,.82); backdrop-filter: blur(8px); }
+  .heroi-botoes .botao { padding: 12px 16px; font-size: 14px; white-space: nowrap; background: rgba(10,11,10,.92); }
   .heroi-botoes .botao-cheio { background: var(--acento); }
   .heroi .legenda, .segmentos { display: none; }
   .titulo-2 { font-size: clamp(32px, 9vw, 52px); }
