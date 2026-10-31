@@ -138,8 +138,9 @@ addEventListener("pointermove", (e) => {
 /* ---------- Poses do iPhone, uma por passo da jornada ---------- */
 const passos = $$("[data-passo]");
 (() => {
-  // 32 fatias = 32 px de espessura. Brilho segue o perfil arredondado da lateral (escuro nas quinas, claro no meio).
-  const camadas = $(".iphone-camadas"), N = 32;
+  // Fatias = 32 px de espessura. Brilho segue o perfil arredondado da lateral (escuro nas quinas, claro no meio).
+  // No celular são só 10 fatias: cada uma vira uma textura da GPU, e 32 estouravam a memória (tela preta e quadrados cinza).
+  const camadas = $(".iphone-camadas"), N = innerWidth <= 960 ? 10 : 32, passo = 32 / N;
   let h = "";
   for (let k = 1; k <= N; k++) {
     const t = k / N, perfil = Math.pow(Math.sin(Math.PI * Math.min(t, 0.98)), 0.55);
@@ -147,7 +148,7 @@ const passos = $$("[data-passo]");
     const fatia = k === N
       ? "radial-gradient(120% 90% at 30% 15%, #4a4843, #23221f 60%, #161513)"
       : `linear-gradient(140deg, rgb(${c(250)},${c(246)},${c(236)}), rgb(${c(150)},${c(147)},${c(139)}) 30%, rgb(${c(205)},${c(201)},${c(192)}) 58%, rgb(${c(120)},${c(118)},${c(111)}) 85%)`;
-    h += `<i style="--z:${(-k).toFixed(2)}px;--fatia:${fatia}"></i>`;
+    h += `<i style="--z:${(-k * passo).toFixed(2)}px;--fatia:${fatia}"></i>`;
   }
   camadas.innerHTML = h;
 })();
@@ -189,7 +190,7 @@ function passoAtivo() {
   let a = 0;
   passos.forEach((p, i) => { if (p.getBoundingClientRect().top <= topoTexto + 1) a = i; });
   // o texto que está saindo some assim que começa a subir, para não passar por baixo do topo
-  const saindo = a < passos.length - 1 && conteudos[a].getBoundingClientRect().top < topoTexto - 2;
+  const saindo = conteudos[a].getBoundingClientRect().top < topoTexto - 2;
   passos.forEach((p, i) => p.classList.toggle("ativo", !celular || (i === a && !saindo)));
 }
 escalar(); addEventListener("resize", () => { if (!soAltura()) escalar(); });
