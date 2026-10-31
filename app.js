@@ -115,17 +115,6 @@ function trocarTela(t) {
   if (t === "pratica") mostrarAba(abaAtual);
 }
 
-/* Tamanho do celular conforme a tela */
-let larguraAnterior = innerWidth;
-// No toque, a barra de endereço muda só a altura ao rolar: ignora esse resize para o celular não "pular".
-const soAltura = () => { const igual = matchMedia("(pointer: coarse)").matches && innerWidth === larguraAnterior; larguraAnterior = innerWidth; return igual; };
-function escalar() {
-  const celular = innerWidth <= 960;
-  const altura = celular ? Math.max(innerHeight, 560) : innerHeight;
-  const e = celular ? clamp((altura * 0.58) / 620, 0.55, 0.85) : clamp((altura * 0.8) / 620, 0.7, 1.3);
-  $(".cena3d").style.setProperty("--escala", e.toFixed(3));
-}
-escalar(); addEventListener("resize", () => { if (!soAltura()) escalar(); });
 
 /* ---------- Formulário: abre o WhatsApp com a mensagem pronta ---------- */
 $("#form-contato").addEventListener("submit", (e) => {
@@ -175,6 +164,39 @@ const cena3d = $(".cena3d"), frente = $(".iphone-frente"), sombra = $(".sombra")
 const jornada = $(".jornada");
 let intro = reduzido ? 1 : 0;
 
+/* Tamanho do celular conforme a tela */
+let larguraAnterior = innerWidth;
+// No toque, a barra de endereço muda só a altura ao rolar: ignora esse resize para o celular não "pular".
+const soAltura = () => { const igual = matchMedia("(pointer: coarse)").matches && innerWidth === larguraAnterior; larguraAnterior = innerWidth; return igual; };
+// Métricas do celular (até 960px): o texto do passo fica preso no alto e o iPhone, inteiro, embaixo.
+// Mede o maior bloco de texto e dá ao iPhone só a altura que sobra, então os dois nunca se cruzam.
+const palco = $(".palco"), conteudos = passos.map((p) => $(".passo-conteudo", p));
+let celular = false, topoTexto = 0;
+function escalar() {
+  celular = innerWidth <= 960;
+  const pratica = passos[passos.length - 1];
+  if (!celular) {
+    pratica.style.paddingBottom = "";
+    $(".cena3d").style.setProperty("--escala", clamp((innerHeight * 0.8) / 620, 0.7, 1.3).toFixed(3));
+    return;
+  }
+  topoTexto = $(".topo").offsetHeight + 4;
+  html.style.setProperty("--topo-texto", `${topoTexto}px`);
+  const alturaTela = palco.clientHeight; // 100svh: não muda com a barra de endereço
+  const texto = Math.max(...conteudos.map((c) => c.offsetHeight));
+  const livre = alturaTela - topoTexto - texto - 20 - 12; // folga entre texto e iPhone, e margem de baixo
+  $(".cena3d").style.setProperty("--escala", clamp(livre / 650, 0.3, 0.85).toFixed(3)); // 650 = 620 do aparelho + giro em 3D
+  // o texto da prática solta junto com o iPhone no fim da jornada
+  pratica.style.paddingBottom = `${Math.max(0, alturaTela - topoTexto - conteudos[conteudos.length - 1].offsetHeight)}px`;
+}
+function passoAtivo() {
+  let a = 0;
+  passos.forEach((p, i) => { if (p.getBoundingClientRect().top <= topoTexto + 1) a = i; });
+  // o texto que está saindo some assim que começa a subir, para não passar por baixo do topo
+  const saindo = a < passos.length - 1 && conteudos[a].getBoundingClientRect().top < topoTexto - 2;
+  passos.forEach((p, i) => p.classList.toggle("ativo", !celular || (i === a && !saindo)));
+}
+escalar(); addEventListener("resize", () => { if (!soAltura()) escalar(); });
 function poseAtual(t) {
   const meio = innerHeight / 2;
   // posição contínua entre os centros dos passos (0 = topo, 1 = cenas, 2 = prática)
@@ -326,6 +348,7 @@ function quadro(agora) {
   sombra.style.setProperty("--sombra", (0.7 + Math.cos(p.ry * Math.PI / 180) * 0.3).toFixed(3));
   sombra.style.setProperty("--sombra-x", `${(-p.ry * 1.2).toFixed(1)}px`);
   trocarTela(passos[Math.round(k)].dataset.passo);
+  passoAtivo();
 
   // fundo: caos no topo, fios na prática; mais discreto depois da jornada
   const rj = jornada.getBoundingClientRect();
@@ -344,6 +367,7 @@ function quadro(agora) {
 
 document.fonts.ready.then(() => requestAnimationFrame(() => {
   html.classList.add("pronto");
+  escalar();
   $$(".heroi .revela").forEach((el) => el.classList.add("visivel"));
 }));
 if (reduzido) {

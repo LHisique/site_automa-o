@@ -107,6 +107,7 @@ main, .rodape { position: relative; z-index: 1; }
 .passos-jornada { grid-column: 1; grid-row: 1; position: relative; z-index: 2; }
 .passo { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 120px var(--margem) 80px; }
 .pratica { min-height: 150vh; justify-content: flex-start; padding-top: 25vh; }
+.passo-conteudo { display: contents; }
 
 .cena3d { position: relative; perspective: 1250px; perspective-origin: 50% 40%; transform: scale(var(--escala)); }
 .iphone { --w: 300px; --h: 620px; --r: 50px; width: var(--w); height: var(--h); position: relative; transform-style: preserve-3d; will-change: transform; }
@@ -307,12 +308,14 @@ input:focus, textarea:focus { outline: none; border-bottom-color: var(--acento);
   .topo-menu { display: block; margin-left: auto; }
   .jornada { grid-template-columns: minmax(0, 1fr); }
   .palco, .passos-jornada { grid-column: 1; grid-row: 1; }
-  /* o celular "sobe" da borda de baixo: a parte de baixo fica fora da tela e não disputa espaço com o texto */
-  .palco { place-items: end center; padding-bottom: 0; overflow: hidden; }
-  .cena3d { transform-origin: 50% 100%; translate: 0 20%; }
+  /* Duas zonas que não se cruzam: o texto do passo fica preso no alto e o iPhone, inteiro, embaixo.
+     O app.js mede o texto e calcula a escala do iPhone para caber no espaço que sobra. */
+  .palco { place-items: end center; padding-bottom: 12px; }
+  .cena3d { transform-origin: 50% 100%; }
   .flutua { display: none; }
-  .passo { justify-content: flex-start; padding-top: 84px; padding-bottom: 40px; }
-  .heroi { padding-bottom: 54svh; }
+  .passo { display: block; min-height: 135svh; padding: 0 var(--margem); }
+  .passo-conteudo { display: block; position: sticky; top: var(--topo-texto, 72px); opacity: 0; visibility: hidden; transition: opacity .35s var(--ease), visibility 0s linear .35s; }
+  .passo.ativo .passo-conteudo { opacity: 1; visibility: visible; transition: opacity .45s var(--ease); }
   .heroi-titulo { font-size: clamp(30px, 8.6vw, 52px); max-width: none; line-height: .98; }
   .heroi .selo { margin-bottom: 14px; font-size: 11px; }
   .heroi-sub { margin-top: 14px; font-size: 16px; max-width: 30ch; }
@@ -320,19 +323,21 @@ input:focus, textarea:focus { outline: none; border-bottom-color: var(--acento);
   .heroi-botoes .botao { padding: 12px 16px; font-size: 14px; white-space: nowrap; background: rgba(10,11,10,.82); backdrop-filter: blur(8px); }
   .heroi-botoes .botao-cheio { background: var(--acento); }
   .heroi .legenda, .segmentos { display: none; }
-  .cenas { min-height: 185svh; }
   .titulo-2 { font-size: clamp(32px, 9vw, 52px); }
-  .cenas .titulo-2, .pratica .titulo-2 { background: rgba(10,11,10,.7); backdrop-filter: blur(10px); padding-bottom: .1em; }
-  .cenas-lista { border-top: 0; margin-top: 20px; }
-  .cenas-lista li { grid-template-columns: 1fr; padding: 16px; margin-bottom: 10px; border: 1px solid var(--linha); border-radius: 14px; background: rgba(10,11,10,.82); backdrop-filter: blur(12px); }
-  .cena-num { grid-row: auto; }
-  .pratica { padding-top: 84px; min-height: 190svh; }
+  /* cenas viram um carrossel: o bloco fica baixo e sobra altura para o iPhone */
+  .cenas-lista { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; border-top: 0; margin: 18px calc(-1 * var(--margem)) 0; padding: 0 var(--margem); scroll-padding: 0 var(--margem); scrollbar-width: none; }
+  .cenas-lista::-webkit-scrollbar { display: none; }
+  .cenas-lista li { flex: 0 0 84%; scroll-snap-align: start; grid-template-columns: 1fr; gap: 4px; padding: 14px 16px; border: 1px solid var(--linha); border-radius: 14px; background: rgba(10,11,10,.82); }
+  .cena-num { grid-row: auto; font-size: 12px; line-height: 1.4; }
+  .cena-quem { font-size: 14px; }
+  .cena-fim { font-size: 17px; }
+  .pratica { min-height: 150svh; }
   .abas { display: flex; overflow-x: auto; gap: 8px; border: 0; margin-top: 18px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .abas button { flex: none; flex-direction: column; gap: 6px; padding: 12px 16px !important; border: 1px solid var(--linha); border-radius: 14px; background: rgba(10,11,10,.85); }
   .abas button::before { display: none; }
   .abas button[aria-pressed="true"] { border-color: var(--acento); }
   .abas strong { font-size: 17px; }
-  .frase { font-size: 16px; margin-top: 14px; background: rgba(10,11,10,.7); }
+  .frase { font-size: 16px; line-height: 1.4; margin-top: 14px; min-height: 2.8em; }
   .passos { grid-template-columns: 1fr; }
   .passos li { padding: 24px 0 !important; border-right: 0; border-bottom: 1px solid var(--linha); }
   .combinados, .combinados ul, .duvidas, .contato-grade { grid-template-columns: 1fr; }
@@ -350,9 +355,10 @@ input:focus, textarea:focus { outline: none; border-bottom-color: var(--acento);
   .formulario { padding: 20px 16px; }
   .rodape-gigante { font-size: 36vw; }
 }
-@media (max-width: 960px) and (max-height: 640px) {
-  .heroi-sub { display: none; }
-  .heroi { padding-bottom: 50svh; }
+@media (max-width: 960px) and (max-height: 720px) {
+  .heroi .selo, .heroi-sub, .pratica .legenda { display: none; }
+  .heroi-titulo { font-size: clamp(28px, 7.6vw, 40px); }
+  .titulo-2 { font-size: clamp(28px, 8vw, 40px); }
 }
 
 /* Movimento reduzido */
