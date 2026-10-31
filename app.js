@@ -116,12 +116,16 @@ function trocarTela(t) {
 }
 
 /* Tamanho do celular conforme a tela */
+let larguraAnterior = innerWidth;
+// No toque, a barra de endereço muda só a altura ao rolar: ignora esse resize para o celular não "pular".
+const soAltura = () => { const igual = matchMedia("(pointer: coarse)").matches && innerWidth === larguraAnterior; larguraAnterior = innerWidth; return igual; };
 function escalar() {
   const celular = innerWidth <= 960;
-  const e = celular ? clamp((innerHeight * 0.4) / 620, 0.46, 0.66) : clamp((innerHeight * 0.8) / 620, 0.7, 1.3);
+  const altura = celular ? Math.max(innerHeight, 560) : innerHeight;
+  const e = celular ? clamp((altura * 0.58) / 620, 0.55, 0.85) : clamp((altura * 0.8) / 620, 0.7, 1.3);
   $(".cena3d").style.setProperty("--escala", e.toFixed(3));
 }
-escalar(); addEventListener("resize", escalar);
+escalar(); addEventListener("resize", () => { if (!soAltura()) escalar(); });
 
 /* ---------- Formulário: abre o WhatsApp com a mensagem pronta ---------- */
 $("#form-contato").addEventListener("submit", (e) => {
@@ -196,7 +200,7 @@ function poseAtual(t) {
 }
 function criarCampo(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 760 ? 1.5 : 1.75));
   const cena = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
   camera.position.set(0, 0, 14);
@@ -276,10 +280,15 @@ function criarCampo(canvas) {
   cena.add(pontos);
 
   const ray = new THREE.Raycaster(), plano = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), hit = new THREE.Vector3();
+  let ultimaLargura = 0;
   function tamanho() {
-    renderer.setSize(innerWidth, innerHeight, false);
-    camera.aspect = innerWidth / innerHeight;
-    camera.position.z = innerWidth < 760 ? 19 : 14;
+    // usa o tamanho real do canvas (CSS 100% do viewport), não innerWidth/innerHeight
+    const w = canvas.clientWidth || innerWidth, h = canvas.clientHeight || innerHeight;
+    if (matchMedia("(pointer: coarse)").matches && w === ultimaLargura) return; // só a barra de endereço mudou
+    ultimaLargura = w;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.position.z = w < 760 ? 19 : 14;
     camera.updateProjectionMatrix();
   }
   tamanho();
