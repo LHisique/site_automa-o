@@ -2,7 +2,6 @@
 import * as THREE from "three";
 
 const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const mouseFino = matchMedia("(pointer: fine)").matches;
 const html = document.documentElement;
 html.classList.add("js");
 const $ = (s, el = document) => el.querySelector(s);
@@ -127,16 +126,13 @@ $("#form-contato").addEventListener("submit", (e) => {
   aviso.textContent = "Abrimos o WhatsApp com a sua mensagem pronta.";
 });
 
-/* ---------- Cursor e mouse ---------- */
+/* ---------- Mouse: o cursor é o do sistema; as partículas e o iPhone reagem a ele ---------- */
 const mouse = { x: innerWidth / 2, y: innerHeight / 2, vx: 0, vy: 0, nx: 0, ny: 0 };
-const cursor = $(".cursor"), ponto = $(".cursor-ponto"), anel = $(".cursor-anel"), anelPos = { x: mouse.x, y: mouse.y };
-if (mouseFino && !reduzido) html.classList.add("cursor-ativo");
 addEventListener("pointermove", (e) => {
   if (e.pointerType !== "mouse") return;
   mouse.vx += e.clientX - mouse.x; mouse.vy += e.clientY - mouse.y;
   mouse.x = e.clientX; mouse.y = e.clientY;
   mouse.nx = (e.clientX / innerWidth) * 2 - 1; mouse.ny = -(e.clientY / innerHeight) * 2 + 1;
-  cursor.classList.toggle("sobre", !!e.target.closest("a, button, summary, input, textarea, label"));
 }, { passive: true });
 
 /* ---------- Poses do iPhone, uma por passo da jornada ---------- */
@@ -356,9 +352,6 @@ function quadro(agora) {
   mix = lerp(mix, clamp(k, 0, 2), 0.05);
   opac = lerp(opac, dentro ? 1 : 0.28, 0.05);
 
-  ponto.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0)`;
-  anelPos.x = lerp(anelPos.x, mouse.x, 0.16); anelPos.y = lerp(anelPos.y, mouse.y, 0.16);
-  anel.style.transform = `translate3d(${anelPos.x}px, ${anelPos.y}px, 0)`;
   const vel = Math.hypot(mouse.vx, mouse.vy); mouse.vx = mouse.vy = 0;
   forca = lerp(forca, clamp(vel / 40, 0, 1.6), vel > forca * 40 ? 0.25 : 0.035);
   campo?.quadro(t, mix, opac, forca);
