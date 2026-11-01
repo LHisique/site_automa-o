@@ -143,10 +143,10 @@ addEventListener("pointermove", (e) => {
 /* ---------- Poses do iPhone, uma por passo da jornada ---------- */
 const passos = $$("[data-passo]");
 const poses = {
-  // ry acumula: da abertura à tela de bloqueio o aparelho dá uma volta inteira e mostra as câmeras
+  // o aparelho balança de um lado para o outro e nunca mostra a traseira
   heroi:    { rx: 9, ry: -22, rz: 5,  y: 0,  s: 1 },
-  bloqueio: { rx: 4, ry: 377, rz: -3, y: 0, s: 0.98 },
-  pratica:  { rx: 3,  ry: 353, rz: 0,  y: 0,  s: 1 },
+  bloqueio: { rx: 4, ry: 24,  rz: -3, y: 0, s: 0.98 },
+  pratica:  { rx: 3,  ry: -6,  rz: 0,  y: 0,  s: 1 },
 };
 const frente = $(".iphone-frente"), sombra = $(".sombra"), ancora = $(".ancora"), canvasFone = $("#fone");
 const jornada = $(".jornada");
