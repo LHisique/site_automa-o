@@ -8,7 +8,7 @@ Abra `index.html` no navegador.
 |---|---|
 | Número de WhatsApp | `WHATSAPP` no topo de `app.js` e o link `wa.me` em `index.html` |
 | E-mail | `index.html` (contato) e `privacidade.html` |
-| CPF/CNPJ e hospedagem | campos `[PREENCHER]` em `privacidade.html` |
+| CPF e hospedagem (Netlify) | `privacidade.html` |
 | Conversas do celular | `index.html`: cada `<ol class="chat">` dentro do iPhone |
 | Poses do iPhone na rolagem | objeto `poses` em `app.js` |
 
