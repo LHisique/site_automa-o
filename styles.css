@@ -103,11 +103,15 @@ main, .rodape { position: relative; z-index: 1; }
 /* corpo: fatias de titânio empilhadas em profundidade (7,6 mm em escala), sombreadas como uma lateral arredondada */
 .iphone-camadas, .iphone-camadas i { position: absolute; inset: 0; border-radius: var(--r); transform-style: preserve-3d; }
 .iphone-camadas i { background: var(--fatia); transform: translateZ(var(--z)); backface-visibility: visible; }
-.botao-lado { position: absolute; width: 4px; border-radius: 2px; background: linear-gradient(90deg, #6d6b65, #b9b6ae 45%, #77746d); transform: translateZ(-15.5px); box-shadow: 0 0 1px rgba(0,0,0,.6); }
-.botao-acao { left: -2.5px; top: 102px; height: 28px; }
-.botao-vol1 { left: -2.5px; top: 148px; height: 50px; }
-.botao-vol2 { left: -2.5px; top: 208px; height: 50px; }
-.botao-power { right: -2.5px; top: 168px; height: 80px; }
+/* botões laterais: placas viradas 90° ficam rentes à lateral do corpo e ganham volume ao girar o aparelho */
+.botao-lado { position: absolute; left: 0; width: 10px; border-radius: 3px; background: linear-gradient(90deg, #5a5852, #c9c6be 35%, #8a877f 70%, #4d4b46); transform-origin: 0 50%; transform: translate3d(-1.6px, 0, -11px) rotateY(90deg); }
+.botao-acao { top: 102px; height: 28px; }
+.botao-vol1 { top: 148px; height: 50px; }
+.botao-vol2 { top: 208px; height: 50px; }
+.botao-power, .botao-camera { transform: translate3d(calc(var(--w) + 1.6px), 0, -11px) rotateY(90deg); }
+.botao-power { top: 168px; height: 80px; }
+/* Camera Control: faixa de safira rebaixada, mais escura que o titânio */
+.botao-camera { top: 386px; height: 52px; width: 8px; border-radius: 4px; background: linear-gradient(90deg, #15161a, #3b3d44 45%, #1b1c20); box-shadow: 0 0 0 .6px rgba(190,186,176,.55); transform: translate3d(calc(var(--w) + .9px), 0, -12px) rotateY(90deg); }
 /* frente: aro de titânio fino, borda preta, vidro */
 .iphone-frente {
   position: absolute; inset: 0; border-radius: var(--r); padding: 2.5px;
@@ -121,14 +125,18 @@ main, .rodape { position: relative; z-index: 1; }
     linear-gradient(170deg, rgba(255,255,255,.07), transparent 22%);
 }
 .tela { position: absolute; inset: 2.5px; border-radius: calc(var(--r) - 2.5px); background: #050505; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); }
-.ilha { position: absolute; z-index: 5; top: 17px; left: 50%; width: 96px; height: 28px; margin-left: -48px; border-radius: 20px; background: #000; box-shadow: inset 0 0 0 .5px rgba(255,255,255,.04); }
+.ilha { position: absolute; z-index: 5; top: 14px; left: 50%; width: 96px; height: 28px; margin-left: -48px; border-radius: 20px; background: #000; box-shadow: inset 0 0 0 .5px rgba(255,255,255,.04); }
 .ilha::after { content: ""; position: absolute; right: 9px; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 38% 35%, #2b3550 0 18%, #0d1120 38%, #050608 70%); box-shadow: inset 0 0 0 1.5px #0b0b0c; }
-.status { position: absolute; z-index: 4; top: 23px; left: 36px; right: 26px; display: flex; justify-content: space-between; align-items: center; font: 600 14px/1 -apple-system, "SF Pro Text", var(--sans); letter-spacing: -.01em; color: #0b0b0b; fill: currentColor; transition: color .5s; }
+.status { position: absolute; z-index: 4; top: 20px; left: 36px; right: 26px; display: flex; justify-content: space-between; align-items: center; font: 600 14px/1 -apple-system, "SF Pro Text", var(--sans); letter-spacing: -.01em; color: #0b0b0b; fill: currentColor; transition: color .5s; }
 .iphone[data-tela="bloqueio"] .status { color: #fff; }
+/* na tela de bloqueio do iPhone a barra de cima não mostra a hora: ela fica no relógio grande */
+.iphone[data-tela="bloqueio"] .status .relogio { visibility: hidden; }
+.indicador { position: absolute; z-index: 5; left: 50%; bottom: 7px; width: 104px; height: 4px; margin-left: -52px; border-radius: 2px; background: #0b0b0b; opacity: .9; transition: background .5s; }
+.iphone[data-tela="bloqueio"] .indicador { background: #fff; opacity: .85; }
 .status .relogio { color: inherit; }
 .status-icones { display: flex; gap: 5px; align-items: center; }
 
-.app { position: absolute; inset: 7px; border-radius: calc(var(--r) - 9.5px); box-shadow: inset 0 0 0 .5px rgba(0,0,0,.5); overflow: hidden; display: flex; flex-direction: column; opacity: 0; transition: opacity .6s var(--ease); background: #efeae2; color: #111b21; font-family: var(--sans); }
+.app { position: absolute; inset: 4.5px; border-radius: calc(var(--r) - 7px); box-shadow: inset 0 0 0 .5px rgba(0,0,0,.5); overflow: hidden; display: flex; flex-direction: column; opacity: 0; transition: opacity .6s var(--ease); background: #efeae2; color: #111b21; font-family: var(--sans); }
 .iphone[data-tela="heroi"] .app-heroi, .iphone[data-tela="bloqueio"] .app-bloqueio, .iphone[data-tela="pratica"] .app-pratica { opacity: 1; z-index: 2; }
 .zap-topo { display: flex; align-items: center; gap: 9px; padding: 52px 14px 10px; background: #f7f5f3; border-bottom: 1px solid #e3e0dc; }
 .voltar { font-size: 26px; line-height: 1; color: #0b8a5f; }
@@ -145,11 +153,11 @@ main, .rodape { position: relative; z-index: 1; }
 .msg.sistema { align-self: center; background: #fff; font-size: 11.5px; color: #54656f; padding: 4px 10px; border-radius: 7px; }
 .msg.aviso { background: #fff3c4; text-align: center; max-width: 92%; }
 .meta { display: block; text-align: right; font-size: 10.5px; color: #667781; margin-top: 2px; }
-.tique { color: #53bdeb; font-weight: 500; letter-spacing: -.25em; margin-left: 2px; }
+.tique { color: #53bdeb; display: inline-block; vertical-align: -1px; margin-left: 3px; width: 15px; height: 10px; }
 .quem { display: block; font-size: 12.5px; color: #1f6f4f; margin-bottom: 2px; }
 .link { color: #027eb5; text-decoration: underline; }
 .audio { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 190px; }
-.audio .play { color: #54656f; font-size: 14px; }
+.audio .play { color: #54656f; display: grid; place-items: center; }
 .onda { display: flex; gap: 2px; align-items: center; height: 22px; flex: 1; }
 .onda i { width: 2.5px; border-radius: 2px; background: #8f9a92; height: 40%; }
 .onda i:nth-child(3n) { height: 85%; } .onda i:nth-child(4n+1) { height: 60%; } .onda i:nth-child(5n+2) { height: 30%; }
@@ -158,9 +166,9 @@ main, .rodape { position: relative; z-index: 1; }
 .digitando i { width: 6px; height: 6px; border-radius: 50%; background: #9aa5a0; animation: digita 1s infinite; }
 .digitando i:nth-child(2) { animation-delay: .15s; } .digitando i:nth-child(3) { animation-delay: .3s; }
 @keyframes digita { 30% { transform: translateY(-3px); opacity: 1; } 0%, 60%, 100% { opacity: .4; transform: none; } }
-.zap-base { display: flex; align-items: center; gap: 8px; padding: 8px 10px 18px; background: #f7f5f3; }
+.zap-base { display: flex; align-items: center; gap: 8px; padding: 8px 10px 20px; background: #f7f5f3; }
 .campo-msg { flex: 1; background: #fff; border-radius: 20px; padding: 9px 14px; font-size: 13px; color: #8696a0; }
-.mic { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #1daa61; color: #fff; font-size: 10px; }
+.mic { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #1daa61; color: #fff; }
 /* mensagens que entram uma a uma */
 .js .chat .msg { opacity: 0; transform: translateY(10px) scale(.96); transform-origin: bottom left; transition: opacity .45s var(--ease), transform .55s var(--ease); }
 .js .chat .msg.eu { transform-origin: bottom right; }
@@ -183,15 +191,15 @@ main, .rodape { position: relative; z-index: 1; }
 /* Cartões flutuantes */
 .flutua {
   position: absolute; margin: 0; display: grid; gap: 1px; padding: 10px 14px 10px 34px; border-radius: 13px; white-space: nowrap;
-  background: rgba(20,22,20,.78); border: 1px solid var(--linha); backdrop-filter: blur(10px); color: var(--tinta); font-size: 14px;
+  background: rgba(20,22,20,.94); border: 1px solid var(--linha); color: var(--tinta); font-size: 14px;
   box-shadow: 0 24px 48px -16px rgba(0,0,0,.7); font-size: 13px; opacity: 0; transition: opacity .7s var(--ease), translate .9s var(--ease);
   translate: 0 12px;
 }
 .flutua::before { content: ""; position: absolute; left: 13px; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: var(--acento); box-shadow: 0 0 12px var(--acento); }
 .flutua small { color: var(--tinta-suave); font-size: 11.5px; }
-.f1 { left: -150px; top: 118px; transform: translateZ(55px); }
-.f2 { right: -112px; top: 300px; transform: translateZ(80px); }
-.f3 { left: -150px; top: 548px; transform: translateZ(40px); }
+.f1 { left: -214px; top: 118px; transform: translateZ(40px); }
+.f2 { right: -136px; top: 122px; transform: translateZ(50px); }
+.f3 { left: -226px; top: 540px; transform: translateZ(30px); }
 .iphone[data-tela="heroi"] .flutua.ligado { opacity: 1; translate: 0 0; }
 .sombra { position: absolute; left: 50%; bottom: -64px; width: 300px; height: 60px; margin-left: -150px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.85), rgba(0,0,0,.35) 60%, transparent); filter: blur(10px); transform: translateX(var(--sombra-x, 0px)) scaleX(var(--sombra, 1)); }
 .sombra::after { content: ""; position: absolute; left: 25%; right: 25%; top: 40%; height: 12px; border-radius: 50%; background: rgba(0,0,0,.8); filter: blur(6px); }
