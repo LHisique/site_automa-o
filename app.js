@@ -1,6 +1,6 @@
 // Turno. O iPhone acompanha a rolagem até "Na prática" e para ali. Fundo: pontos soltos que viram fios.
 import * as THREE from "three";
-import { criarFone, matrizCss } from "./fone.js";
+import { criarFone, transformeTela } from "./fone.js";
 
 const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const html = document.documentElement;
@@ -177,7 +177,7 @@ function escalar() {
     pratica.style.paddingBottom = `${Math.max(0, alturaTela - topoTexto - conteudos[conteudos.length - 1].offsetHeight)}px`;
   }
   palco.style.setProperty("--escala", escala.toFixed(3));
-  fone?.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala);
+  if (fone) { fone.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala); palco.style.perspective = `${1240 * escala}px`; }
 }
 function passoAtivo() {
   let a = 0;
@@ -338,8 +338,8 @@ function quadro(agora) {
   const { p, k } = poseAtual(t);
   if (fone) {
     const cx = palco.clientWidth / 2, cy = celular ? palco.clientHeight - 22 - 345 * escala : palco.clientHeight / 2;
-    const { pontos, frente: de } = fone.quadro(p, cx, cy);
-    iphone.style.transform = matrizCss(288, 604, pontos);
+    const { frente: de } = fone.quadro(p, cx, cy);
+    iphone.style.transform = transformeTela(288, 604, 620 * escala, p, cx, cy);
     iphone.style.setProperty("--vis", clamp((de - 0.04) / 0.12).toFixed(2)); // some enquanto o aparelho está de costas
     const k3 = 620 * escala * p.s / 620;
     ancora.style.transform = `translate3d(${(cx - 150 * k3).toFixed(1)}px, ${(cy + p.y - 310 * k3).toFixed(1)}px, 0) scale(${k3.toFixed(4)})`;

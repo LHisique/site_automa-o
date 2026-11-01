@@ -1,7 +1,7 @@
 /* iPhone 16 Pro Max em 3D (Three.js).
    Modelo: "Iphone 16 Pro Max" por shig0 (https://sketchfab.com/shig0), licença CC-BY 4.0.
    O modelo cuida do corpo (titânio, vidro, câmeras, botões). A tela é HTML: este módulo
-   devolve onde os quatro cantos da tela caíram na imagem, e o app.js encaixa o HTML ali. */
+   devolve a transformação CSS que encaixa o HTML sobre o vidro, e se a tela está de frente. */
 import * as THREE from "three";
 import { GLTFLoader } from "./assets/vendor/three-addons/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "./assets/vendor/three-addons/environments/RoomEnvironment.js";
@@ -75,7 +75,6 @@ export async function criarFone(canvas) {
     camera.updateProjectionMatrix();
   }
 
-  const cantos = [[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([sx, sy]) => new THREE.Vector3(sx * TELA.x, sy * TELA.y, TELA.z));
   const v = new THREE.Vector3(), normal = new THREE.Vector3(), centro = new THREE.Vector3();
   const rad = Math.PI / 180;
   // pose em graus no sentido do CSS (y para baixo): por isso os sinais de rx e rz
@@ -85,23 +84,19 @@ export async function criarFone(canvas) {
     pivo.rotation.set(-pose.rx * rad, pose.ry * rad, -pose.rz * rad, "XYZ");
     pivo.updateMatrixWorld(true);
     renderer.render(cena, camera);
-    const pontos = cantos.map((c) => { v.copy(c).applyMatrix4(pivo.matrixWorld).project(camera); return [(v.x + 1) / 2 * L, (1 - v.y) / 2 * A]; });
     // tela visível só enquanto está virada para a câmera
     normal.set(0, 0, 1).transformDirection(pivo.matrixWorld);
     centro.set(0, 0, TELA.z).applyMatrix4(pivo.matrixWorld);
     const de = camera.position.clone().sub(centro).normalize();
-    return { pontos, frente: normal.dot(de) };
+    return { frente: normal.dot(de) };
   }
   return { ajustar, quadro };
 }
 
-/* Matriz CSS (matrix3d) que leva o retângulo w×h do elemento para os quatro pontos dados
-   (topo-esquerda, topo-direita, base-direita, base-esquerda): é a projeção exata da tela. */
-export function matrizCss(w, h, [[x0, y0], [x1, y1], [x2, y2], [x3, y3]]) {
-  const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3;
-  const dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
-  const den = dx1 * dy2 - dy1 * dx2;
-  const g = den ? (dx3 * dy2 - dy3 * dx2) / den : 0, hh = den ? (dx1 * dy3 - dy1 * dx3) / den : 0;
-  const a = x1 - x0 + g * x1, b = x3 - x0 + hh * x3, d = y1 - y0 + g * y1, e = y3 - y0 + hh * y3;
-  return `matrix3d(${a / w},${d / w},0,${g / w},${b / h},${e / h},0,${hh / h},0,0,1,0,${x0},${y0},0,1)`;
+/* Transformação CSS que deita o bloco w×h da tela sobre o vidro do modelo. Usa a mesma câmera do
+   three.js: perspectiva de 2 alturas (aplicada pelo app.js no palco) e a mesma ordem de rotações.
+   Não usa matrix3d com divisão por w: o iOS/WebKit nem sempre respeita. */
+export function transformeTela(w, h, px, pose, cx, cy) {
+  const kx = 2 * TELA.x * px / w, ky = 2 * TELA.y * px / h;
+  return `translate3d(${cx.toFixed(2)}px,${(cy + pose.y).toFixed(2)}px,0) scale(${pose.s}) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) rotateZ(${pose.rz}deg) translateZ(${(TELA.z * px).toFixed(2)}px) scale(${kx.toFixed(5)},${ky.toFixed(5)}) translate(${-w / 2}px,${-h / 2}px)`;
 }
