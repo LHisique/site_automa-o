@@ -1,0 +1,107 @@
+/* iPhone 16 Pro Max em 3D (Three.js).
+   Modelo: "Iphone 16 Pro Max" por shig0 (https://sketchfab.com/shig0), licença CC-BY 4.0.
+   O modelo cuida do corpo (titânio, vidro, câmeras, botões). A tela é HTML: este módulo
+   devolve onde os quatro cantos da tela caíram na imagem, e o app.js encaixa o HTML ali. */
+import * as THREE from "three";
+import { GLTFLoader } from "./assets/vendor/three-addons/loaders/GLTFLoader.js";
+import { RoomEnvironment } from "./assets/vendor/three-addons/environments/RoomEnvironment.js";
+
+// Eixos do aparelho dentro do arquivo do Sketchfab (medidos no próprio modelo): com eles o corpo
+// fica em pé, de frente para a câmera, e a altura passa a valer 1 (o arquivo tem 1,634).
+const EIXO_X = new THREE.Vector3(-0.8022965778, 0.2771029727, -0.5287098862);
+const EIXO_Y = new THREE.Vector3(0.4727748418, 0.8357111984, -0.2794114203);
+const EIXO_Z = new THREE.Vector3(0.3644230374, -0.4741315568, -0.8014955487);
+const ALTURA_ARQUIVO = 1.634;
+// Meia-largura, meia-altura e profundidade do vidro da tela, já com altura do corpo = 1
+const TELA = { x: 0.23032, y: 0.48298, z: 0.02528 };
+// Acabamento do titânio. Troque aqui para outra cor do iPhone.
+const COR = { moldura: "#aaa69c", fundo: "#8e8a82", logo: "#6f6c66" };
+
+function lerGlb(base64) {
+  const bin = atob(base64), bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+
+function acabamento(raiz) {
+  raiz.traverse((o) => {
+    if (!o.isMesh) return;
+    const m = o.material;
+    switch (m.name) {
+      case "ereve": m.color.set(COR.moldura); m.metalness = 1; m.roughness = 0.3; break; // moldura de titânio
+      case "ana_renk": m.color.set(COR.fundo); m.metalness = 0.6; m.roughness = 0.4; break; // vidro fosco de trás
+      case "logo": m.color.set(COR.logo); m.metalness = 1; m.roughness = 0.2; break;
+      case "wallpaper": // a tela em si: vidro preto; o conteúdo é o HTML por cima
+        o.material = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.12, metalness: 0 }); break;
+      case "glass": case "cam_materyal": // vidros da câmera, sem transmissão (que pesa muito no celular)
+        m.transmission = 0; m.transparent = true; m.opacity = 0.16; m.depthWrite = false; m.roughness = 0.05; m.metalness = 0; m.color.set(0xffffff); break;
+    }
+  });
+}
+
+export async function criarFone(canvas) {
+  if (!window.IPHONE_GLB) throw new Error("modelo ausente");
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
+  renderer.setClearColor(0x000000, 0);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+  const cena = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  cena.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  cena.environmentIntensity = 0.95;
+  pmrem.dispose();
+  // luz de recorte atrás, à direita: desenha o contorno do titânio contra o fundo escuro
+  const recorte = new THREE.DirectionalLight(0xffffff, 1.6); recorte.position.set(2.5, 1.5, -2); cena.add(recorte);
+
+  const gltf = await new Promise((ok, erro) => new GLTFLoader().parse(lerGlb(window.IPHONE_GLB), "", ok, erro));
+  acabamento(gltf.scene);
+  const corpo = new THREE.Group();
+  corpo.matrixAutoUpdate = false;
+  corpo.matrix.makeBasis(EIXO_X, EIXO_Y, EIXO_Z).invert().premultiply(new THREE.Matrix4().makeScale(1 / ALTURA_ARQUIVO, 1 / ALTURA_ARQUIVO, 1 / ALTURA_ARQUIVO));
+  corpo.add(gltf.scene);
+  const pivo = new THREE.Group(); pivo.add(corpo); cena.add(pivo);
+
+  // Câmera a 2 alturas do aparelho (a mesma perspectiva que o site já tinha). O campo de visão é
+  // calculado para que a altura do aparelho na imagem seja exatamente a pedida.
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50); camera.position.z = 2;
+  let L = 1, A = 1, px = 1; // tamanho do canvas e pixels por unidade do modelo
+  function ajustar(largura, altura, alturaAparelho) {
+    L = largura; A = altura; px = alturaAparelho;
+    renderer.setSize(L, A, false);
+    camera.aspect = L / A;
+    camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(A / (2 * camera.position.z * px)));
+    camera.updateProjectionMatrix();
+  }
+
+  const cantos = [[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([sx, sy]) => new THREE.Vector3(sx * TELA.x, sy * TELA.y, TELA.z));
+  const v = new THREE.Vector3(), normal = new THREE.Vector3(), centro = new THREE.Vector3();
+  const rad = Math.PI / 180;
+  // pose em graus no sentido do CSS (y para baixo): por isso os sinais de rx e rz
+  function quadro(pose, cx, cy) {
+    pivo.position.set((cx - L / 2) / px, -(cy + pose.y - A / 2) / px, 0);
+    pivo.scale.setScalar(pose.s);
+    pivo.rotation.set(-pose.rx * rad, pose.ry * rad, -pose.rz * rad, "XYZ");
+    pivo.updateMatrixWorld(true);
+    renderer.render(cena, camera);
+    const pontos = cantos.map((c) => { v.copy(c).applyMatrix4(pivo.matrixWorld).project(camera); return [(v.x + 1) / 2 * L, (1 - v.y) / 2 * A]; });
+    // tela visível só enquanto está virada para a câmera
+    normal.set(0, 0, 1).transformDirection(pivo.matrixWorld);
+    centro.set(0, 0, TELA.z).applyMatrix4(pivo.matrixWorld);
+    const de = camera.position.clone().sub(centro).normalize();
+    return { pontos, frente: normal.dot(de) };
+  }
+  return { ajustar, quadro };
+}
+
+/* Matriz CSS (matrix3d) que leva o retângulo w×h do elemento para os quatro pontos dados
+   (topo-esquerda, topo-direita, base-direita, base-esquerda): é a projeção exata da tela. */
+export function matrizCss(w, h, [[x0, y0], [x1, y1], [x2, y2], [x3, y3]]) {
+  const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3;
+  const dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
+  const den = dx1 * dy2 - dy1 * dx2;
+  const g = den ? (dx3 * dy2 - dy3 * dx2) / den : 0, hh = den ? (dx1 * dy3 - dy1 * dx3) / den : 0;
+  const a = x1 - x0 + g * x1, b = x3 - x0 + hh * x3, d = y1 - y0 + g * y1, e = y3 - y0 + hh * y3;
+  return `matrix3d(${a / w},${d / w},0,${g / w},${b / h},${e / h},0,${hh / h},0,0,1,0,${x0},${y0},0,1)`;
+}

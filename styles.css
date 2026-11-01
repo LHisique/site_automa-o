@@ -92,42 +92,28 @@ main, .rodape { position: relative; z-index: 1; }
 
 /* ---------- Jornada com o iPhone ---------- */
 .jornada { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
-.palco { grid-column: 2; grid-row: 1; align-self: start; position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; place-items: center; z-index: 1; pointer-events: none; }
+.palco { grid-column: 2; grid-row: 1; align-self: start; position: sticky; top: 0; height: 100vh; height: 100svh; z-index: 1; pointer-events: none; }
 .passos-jornada { grid-column: 1; grid-row: 1; position: relative; z-index: 2; }
 .passo { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 120px var(--margem) 80px; }
 .pratica { min-height: 150vh; justify-content: flex-start; padding-top: 25vh; }
 .passo-conteudo { display: contents; }
 
-.cena3d { position: relative; perspective: 1250px; perspective-origin: 50% 40%; transform: scale(var(--escala)); }
-.iphone { --w: 300px; --h: 620px; --r: 50px; width: var(--w); height: var(--h); position: relative; transform-style: preserve-3d; will-change: transform; }
-/* corpo: fatias de titânio empilhadas em profundidade (7,6 mm em escala), sombreadas como uma lateral arredondada */
-.iphone-camadas, .iphone-camadas i { position: absolute; inset: 0; border-radius: var(--r); transform-style: preserve-3d; }
-.iphone-camadas i { background: var(--fatia); transform: translateZ(var(--z)); backface-visibility: visible; }
-/* botões laterais: placas viradas 90° ficam rentes à lateral do corpo e ganham volume ao girar o aparelho */
-.botao-lado { position: absolute; left: 0; width: 10px; border-radius: 3px; background: linear-gradient(90deg, #5a5852, #c9c6be 35%, #8a877f 70%, #4d4b46); transform-origin: 0 50%; transform: translate3d(-1.6px, 0, -11px) rotateY(90deg); }
-.botao-acao { top: 102px; height: 28px; }
-.botao-vol1 { top: 148px; height: 50px; }
-.botao-vol2 { top: 208px; height: 50px; }
-.botao-power, .botao-camera { transform: translate3d(calc(var(--w) + 1.6px), 0, -11px) rotateY(90deg); }
-.botao-power { top: 168px; height: 80px; }
-/* Camera Control: faixa de safira rebaixada, mais escura que o titânio */
-.botao-camera { top: 386px; height: 52px; width: 8px; border-radius: 4px; background: linear-gradient(90deg, #15161a, #3b3d44 45%, #1b1c20); box-shadow: 0 0 0 .6px rgba(190,186,176,.55); transform: translate3d(calc(var(--w) + .9px), 0, -12px) rotateY(90deg); }
-/* frente: aro de titânio fino, borda preta, vidro */
-.iphone-frente {
-  position: absolute; inset: 0; border-radius: var(--r); padding: 2.5px;
-  background: linear-gradient(145deg, #e3e0d8 0%, #8f8c84 18%, #5f5d57 40%, #b5b2aa 62%, #5b5953 82%, #cfccc4 100%);
-  box-shadow: 0 0 0 .5px rgba(0,0,0,.7), inset 0 0 0 .5px rgba(255,255,255,.35);
-}
+/* O aparelho é um modelo 3D desenhado no canvas #fone (fone.js). A tela é HTML: o app.js encaixa
+   este bloco sobre a tela do modelo com matrix3d, então o texto continua sendo texto de verdade. */
+#fone { position: absolute; inset: 0; width: 100%; height: 100%; }
+.iphone { --r: 36px; position: absolute; left: 0; top: 0; width: 288px; height: 604px; transform-origin: 0 0; border-radius: var(--r); overflow: hidden; background: #050505; opacity: 0; visibility: hidden; transition: opacity .5s var(--ease); }
+.fone3d .iphone { opacity: var(--vis, 1); visibility: visible; }
+.iphone-frente, .tela { position: absolute; inset: 0; border-radius: inherit; }
 .iphone-frente::after { /* reflexo do vidro que corre com o giro */
-  content: ""; position: absolute; inset: 2.5px; border-radius: calc(var(--r) - 2.5px); pointer-events: none; z-index: 6;
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 6;
   background:
-    linear-gradient(115deg, transparent 38%, rgba(255,255,255,.11) 46%, rgba(255,255,255,.03) 51%, transparent 58%) var(--brilho, 50%) 0 / 280% 100% no-repeat,
+    linear-gradient(115deg, transparent 38%, rgba(255,255,255,.12) 46%, rgba(255,255,255,.03) 51%, transparent 58%) var(--brilho, 50%) 0 / 280% 100% no-repeat,
     linear-gradient(170deg, rgba(255,255,255,.07), transparent 22%);
 }
-.tela { position: absolute; inset: 2.5px; border-radius: calc(var(--r) - 2.5px); background: #050505; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); }
-.ilha { position: absolute; z-index: 5; top: 14px; left: 50%; width: 96px; height: 28px; margin-left: -48px; border-radius: 20px; background: #000; box-shadow: inset 0 0 0 .5px rgba(255,255,255,.04); }
-.ilha::after { content: ""; position: absolute; right: 9px; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 38% 35%, #2b3550 0 18%, #0d1120 38%, #050608 70%); box-shadow: inset 0 0 0 1.5px #0b0b0c; }
-.status { position: absolute; z-index: 4; top: 20px; left: 36px; right: 26px; display: flex; justify-content: space-between; align-items: center; font: 600 14px/1 -apple-system, "SF Pro Text", var(--sans); letter-spacing: -.01em; color: #0b0b0b; fill: currentColor; transition: color .5s; }
+.tela { overflow: hidden; }
+.ilha { position: absolute; z-index: 5; top: 10px; left: 50%; width: 84px; height: 25px; margin-left: -42px; border-radius: 20px; background: #000; }
+.ilha::after { content: ""; position: absolute; right: 8px; top: 6px; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 38% 35%, #2b3550 0 18%, #0d1120 38%, #050608 70%); box-shadow: inset 0 0 0 1.5px #0b0b0b; }
+.status { position: absolute; z-index: 4; top: 15px; left: 30px; right: 22px; display: flex; justify-content: space-between; align-items: center; font: 600 14px/1 -apple-system, "SF Pro Text", var(--sans); letter-spacing: -.01em; color: #0b0b0b; fill: currentColor; transition: color .5s; }
 .iphone[data-tela="bloqueio"] .status { color: #fff; }
 /* na tela de bloqueio do iPhone a barra de cima não mostra a hora: ela fica no relógio grande */
 .iphone[data-tela="bloqueio"] .status .relogio { visibility: hidden; }
@@ -135,8 +121,12 @@ main, .rodape { position: relative; z-index: 1; }
 .iphone[data-tela="bloqueio"] .indicador { background: #fff; opacity: .85; }
 .status .relogio { color: inherit; }
 .status-icones { display: flex; gap: 5px; align-items: center; }
+/* sem WebGL: a tela fica de pé, no centro, com uma moldura simples */
+.sem3d .iphone { left: 50%; top: 50%; margin: -302px 0 0 -144px; opacity: 1; visibility: visible; box-shadow: 0 0 0 5px #4a4944, 0 0 0 6px #8f8c84, 0 30px 60px -20px rgba(0,0,0,.8); }
+.ancora { position: absolute; left: 0; top: 0; width: 300px; height: 620px; transform-origin: 0 0; opacity: 0; transition: opacity .5s var(--ease); }
+.fone3d .ancora { opacity: 1; }
 
-.app { position: absolute; inset: 4.5px; border-radius: calc(var(--r) - 7px); box-shadow: inset 0 0 0 .5px rgba(0,0,0,.5); overflow: hidden; display: flex; flex-direction: column; opacity: 0; transition: opacity .6s var(--ease); background: #efeae2; color: #111b21; font-family: var(--sans); }
+.app { position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.5); overflow: hidden; display: flex; flex-direction: column; opacity: 0; transition: opacity .6s var(--ease); background: #efeae2; color: #111b21; font-family: var(--sans); }
 .iphone[data-tela="heroi"] .app-heroi, .iphone[data-tela="bloqueio"] .app-bloqueio, .iphone[data-tela="pratica"] .app-pratica { opacity: 1; z-index: 2; }
 .zap-topo { display: flex; align-items: center; gap: 9px; padding: 52px 14px 10px; background: #f7f5f3; border-bottom: 1px solid #e3e0dc; }
 .voltar { font-size: 26px; line-height: 1; color: #0b8a5f; }
@@ -197,10 +187,10 @@ main, .rodape { position: relative; z-index: 1; }
 }
 .flutua::before { content: ""; position: absolute; left: 13px; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: var(--acento); box-shadow: 0 0 12px var(--acento); }
 .flutua small { color: var(--tinta-suave); font-size: 11.5px; }
-.f1 { left: -214px; top: 118px; transform: translateZ(40px); }
-.f2 { right: -136px; top: 122px; transform: translateZ(50px); }
-.f3 { left: -226px; top: 540px; transform: translateZ(30px); }
-.iphone[data-tela="heroi"] .flutua.ligado { opacity: 1; translate: 0 0; }
+.f1 { left: -214px; top: 118px; }
+.f2 { right: -136px; top: 122px; }
+.f3 { left: -226px; top: 540px; }
+.ancora[data-tela="heroi"] .flutua.ligado { opacity: 1; translate: 0 0; }
 .sombra { position: absolute; left: 50%; bottom: -64px; width: 300px; height: 60px; margin-left: -150px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.85), rgba(0,0,0,.35) 60%, transparent); filter: blur(10px); transform: translateX(var(--sombra-x, 0px)) scaleX(var(--sombra, 1)); }
 .sombra::after { content: ""; position: absolute; left: 25%; right: 25%; top: 40%; height: 12px; border-radius: 50%; background: rgba(0,0,0,.8); filter: blur(6px); }
 
@@ -307,8 +297,6 @@ input:focus, textarea:focus { outline: none; border-bottom-color: var(--acento);
   .palco, .passos-jornada { grid-column: 1; grid-row: 1; }
   /* Duas zonas que não se cruzam: o texto do passo fica preso no alto e o iPhone, inteiro, embaixo.
      O app.js mede o texto e calcula a escala do iPhone para caber no espaço que sobra. */
-  .palco { place-items: end center; padding-bottom: 12px; }
-  .cena3d { transform-origin: 50% 100%; }
   .flutua { display: none; }
   /* leve no celular: sem granulado animado nem desfoque de fundo, que travavam a GPU */
   .grao { display: none; }
