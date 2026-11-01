@@ -275,10 +275,10 @@ input:focus, textarea:focus { outline: none; border-bottom-color: var(--acento);
 .rodape { padding: 64px var(--margem) 0; border-top: 1px solid var(--linha); overflow: hidden; }
 .rodape-linha { display: flex; justify-content: space-between; gap: 16px 32px; flex-wrap: wrap; font-size: 15px; color: var(--tinta-suave); }
 .rodape-linha p { margin: 0; }
-.tecnico { margin-top: 40px; max-width: 80ch; color: var(--tinta-suave); font-size: 15px; }
-.tecnico summary { cursor: pointer; font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.tecnico { position: relative; z-index: 2; margin-top: 40px; max-width: 80ch; color: var(--tinta-suave); font-size: 15px; }
+.tecnico summary { cursor: pointer; padding: 10px 0; font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 .tecnico strong { color: var(--tinta); font-weight: 500; }
-.rodape-gigante { font: 700 clamp(120px, 30vw, 520px)/.74 var(--display); letter-spacing: -.07em; color: rgba(238,240,234,.05); margin: 40px 0 0 -.04em; white-space: nowrap; user-select: none; }
+.rodape-gigante { pointer-events: none; font: 700 clamp(120px, 30vw, 520px)/.74 var(--display); letter-spacing: -.07em; color: rgba(238,240,234,.05); margin: 40px 0 0 -.04em; white-space: nowrap; user-select: none; }
 
 /* Página de privacidade */
 .legal { max-width: 720px; margin: 0 auto; padding: 140px var(--margem) 80px; }
