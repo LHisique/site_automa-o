@@ -15,7 +15,8 @@ const WHATSAPP = "5518991919081";
 const relogio = $(".topo .relogio");
 const hora = () => (relogio.textContent = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
 hora(); setInterval(hora, 15000);
-$(".status .relogio").textContent = "23:48";
+const relogioTela = $(".status .relogio");
+relogioTela.textContent = "23:48";
 
 /* ---------- Rolagem suave, âncoras e menu ---------- */
 let lenis = null;
@@ -101,6 +102,8 @@ function mostrarAba(n, tocar = true) {
   $("[data-nome]").textContent = c.dataset.nome;
   $("[data-sub]").textContent = c.dataset.sub || "conta comercial";
   frase.innerHTML = `<strong>${c.dataset.forte}</strong> <span>${c.dataset.resto}</span>`;
+  // a hora da barra de cima é a da última mensagem da conversa (nada de relógio parado em 23:48)
+  relogioTela.textContent = [...c.querySelectorAll(".meta")].pop()?.textContent.trim().slice(0, 5) || "09:41";
   if (tocar) tocarChat(c);
 }
 abas.forEach((b, i) => b.addEventListener("click", () => mostrarAba(i)));
@@ -110,7 +113,7 @@ function trocarTela(t) {
   if (t === telaAtual) return;
   telaAtual = t;
   iphone.dataset.tela = t;
-  if (t === "heroi") tocarHeroi();
+  if (t === "heroi") { relogioTela.textContent = "23:48"; tocarHeroi(); }
   if (t === "pratica") mostrarAba(abaAtual);
 }
 
@@ -155,7 +158,7 @@ const passos = $$("[data-passo]");
 const poses = {
   heroi:    { rx: 9, ry: -22, rz: 5,  y: 0,  s: 1 },
   bloqueio: { rx: 4, ry: 17,  rz: -3, y: 8, s: 0.98 },
-  pratica:  { rx: 0,  ry: 0,   rz: 0,  y: 0,  s: 1 },
+  pratica:  { rx: 3,  ry: -7,  rz: 0,  y: 0,  s: 1 },
 };
 const cena3d = $(".cena3d"), frente = $(".iphone-frente"), sombra = $(".sombra");
 const jornada = $(".jornada");
