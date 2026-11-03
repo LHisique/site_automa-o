@@ -278,9 +278,9 @@ function criarCampo(canvas) {
         // a "mão manual" do visitante bagunça, o sistema reorganiza sozinho
         vec2 d = p.xy - uMouse;
         float dist2 = dot(d, d);
-        float empurra = uForca * exp(-dist2 / 3.2);
-        p.xy += normalize(d + 1e-4) * empurra * 2.2;
-        p.z += empurra * 1.5 * (aR.w - .5);
+        float empurra = uForca * exp(-dist2 / 1.8);
+        p.xy += normalize(d + 1e-4) * empurra * 1.1;
+        p.z += empurra * .8 * (aR.w - .5);
         vec4 mv = modelViewMatrix * vec4(p, 1.);
         gl_Position = projectionMatrix * mv;
         vAcento = step(.955, aR.w) + scan * .6;
@@ -357,7 +357,7 @@ function quadro(agora) {
   opac = lerp(opac, dentro ? 1 : 0.28, 0.05);
 
   const vel = Math.hypot(mouse.vx, mouse.vy); mouse.vx = mouse.vy = 0;
-  forca = lerp(forca, clamp(vel / 40, 0, 1.6), vel > forca * 40 ? 0.25 : 0.035);
+  forca = lerp(forca, clamp(vel / 90, 0, 0.7), vel > forca * 90 ? 0.2 : 0.06);
   campo?.quadro(t, mix, opac, forca);
   if (!reduzido) requestAnimationFrame(quadro);
 }
