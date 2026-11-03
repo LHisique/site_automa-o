@@ -195,6 +195,13 @@ if (/debug/.test(location.search)) {
   painel.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:9999;margin:0;padding:8px;font:11px/1.35 monospace;background:rgba(0,0,0,.85);color:#7f7;max-width:46vw;white-space:pre-wrap;pointer-events:none";
   document.body.append(painel);
   iphone.style.outline = "2px solid cyan";
+  // contorno amarelo: os mesmos cantos desenhados em 2D puro (SVG), sem 3D do CSS
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.style.cssText = "position:absolute;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;overflow:visible";
+  const poli = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+  poli.setAttribute("fill", "none"); poli.setAttribute("stroke", "yellow"); poli.setAttribute("stroke-width", "1.5");
+  svg.append(poli); palco.append(svg);
+  (function laco() { if (fone) poli.setAttribute("points", fone.cantos().map((c) => c.map((n) => n.toFixed(1)).join(",")).join(" ")); requestAnimationFrame(laco); })();
   const r = (e) => { const b = e.getBoundingClientRect(); return [b.x, b.y, b.width, b.height].map((v) => +v.toFixed(1)); };
   setInterval(() => {
     painel.textContent = JSON.stringify({ janela: [innerWidth, innerHeight, devicePixelRatio], doc: document.documentElement.clientWidth, palco: r(palco), palcoCli: [palco.clientWidth, palco.clientHeight], canvas: r(canvasFone), fone: fone?.estado(), escala, iphone: r(iphone), transform: iphone.style.transform.slice(0, 160), nav: navigator.userAgent.replace(/^Mozilla\/5.0 /, "").slice(0, 120) }).replace(/,"/g, ",\n\"");

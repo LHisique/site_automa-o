@@ -110,6 +110,13 @@ export async function criarFone(canvas) {
     const g = new THREE.BufferGeometry().setFromPoints([[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([a, b]) => new THREE.Vector3(tela.cx + a * tela.x, tela.cy + b * tela.y, tela.z + 0.002)));
     const linha = new THREE.LineLoop(g, new THREE.LineBasicMaterial({ color: 0xff0000, depthTest: false })); linha.renderOrder = 9; pivo.add(linha);
   }
-  const estado = () => ({ L, A, px: +px.toFixed(2), buffer: [canvas.width, canvas.height], pr: renderer.getPixelRatio() });
-  return { ajustar, quadro, css, tela, estado };
+  const gl = renderer.getContext(), info = gl.getExtension("WEBGL_debug_renderer_info");
+  const gpu = info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : "?";
+  // cantos da tela projetados pela câmera do three.js, em px do palco (para o contorno 2D do ?debug)
+  const cantos = () => [[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([a, b]) => {
+    v.set(tela.cx + a * tela.x, tela.cy + b * tela.y, tela.z).applyMatrix4(pivo.matrixWorld).project(camera);
+    return [(v.x + 1) / 2 * L, (1 - v.y) / 2 * A];
+  });
+  const estado = () => ({ L, A, px: +px.toFixed(2), buffer: [canvas.width, canvas.height], pr: renderer.getPixelRatio(), gpu: String(gpu).slice(0, 90) });
+  return { ajustar, quadro, css, tela, estado, cantos };
 }
