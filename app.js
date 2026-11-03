@@ -1,5 +1,6 @@
 // Turno. O iPhone acompanha a rolagem até "Na prática" e para ali. Fundo: pontos soltos que viram fios.
 import * as THREE from "three";
+import { criarFone, transformeTela } from "./fone.js";
 
 const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const html = document.documentElement;
@@ -113,6 +114,7 @@ function trocarTela(t) {
   if (t === telaAtual) return;
   telaAtual = t;
   iphone.dataset.tela = t;
+  $(".ancora").dataset.tela = t;
   if (t === "heroi") { relogioTela.textContent = "23:48"; tocarHeroi(); }
   if (t === "pratica") mostrarAba(abaAtual);
 }
@@ -140,27 +142,13 @@ addEventListener("pointermove", (e) => {
 
 /* ---------- Poses do iPhone, uma por passo da jornada ---------- */
 const passos = $$("[data-passo]");
-(() => {
-  // Fatias = 32 px de espessura. Brilho segue o perfil arredondado da lateral (escuro nas quinas, claro no meio).
-  // No celular são só 10 fatias: cada uma vira uma textura da GPU, e 32 estouravam a memória (tela preta e quadrados cinza).
-  const camadas = $(".iphone-camadas"), N = innerWidth <= 960 ? 10 : 32, passo = 32 / N;
-  let h = "";
-  for (let k = 1; k <= N; k++) {
-    const t = k / N, perfil = Math.pow(Math.sin(Math.PI * Math.min(t, 0.98)), 0.55);
-    const L = 0.42 + perfil * 0.5, c = (v) => Math.round(Math.min(255, v * L));
-    const fatia = k === N
-      ? "radial-gradient(120% 90% at 30% 15%, #4a4843, #23221f 60%, #161513)"
-      : `linear-gradient(140deg, rgb(${c(250)},${c(246)},${c(236)}), rgb(${c(150)},${c(147)},${c(139)}) 30%, rgb(${c(205)},${c(201)},${c(192)}) 58%, rgb(${c(120)},${c(118)},${c(111)}) 85%)`;
-    h += `<i style="--z:${(-k * passo).toFixed(2)}px;--fatia:${fatia}"></i>`;
-  }
-  camadas.innerHTML = h;
-})();
 const poses = {
+  // o aparelho balança de um lado para o outro e nunca mostra a traseira
   heroi:    { rx: 9, ry: -22, rz: 5,  y: 0,  s: 1 },
-  bloqueio: { rx: 4, ry: 17,  rz: -3, y: 8, s: 0.98 },
-  pratica:  { rx: 3,  ry: -7,  rz: 0,  y: 0,  s: 1 },
+  bloqueio: { rx: 4, ry: 24,  rz: -3, y: 0, s: 0.98 },
+  pratica:  { rx: 3,  ry: -6,  rz: 0,  y: 0,  s: 1 },
 };
-const cena3d = $(".cena3d"), frente = $(".iphone-frente"), sombra = $(".sombra");
+const frente = $(".iphone-frente"), sombra = $(".sombra"), ancora = $(".ancora"), canvasFone = $("#fone");
 const jornada = $(".jornada");
 let intro = reduzido ? 1 : 0;
 
@@ -171,23 +159,25 @@ const soAltura = () => { const igual = matchMedia("(pointer: coarse)").matches &
 // Métricas do celular (até 960px): o texto do passo fica preso no alto e o iPhone, inteiro, embaixo.
 // Mede o maior bloco de texto e dá ao iPhone só a altura que sobra, então os dois nunca se cruzam.
 const palco = $(".palco"), conteudos = passos.map((p) => $(".passo-conteudo", p));
-let celular = false, topoTexto = 0;
+let celular = false, topoTexto = 0, escala = 1, fone = null;
 function escalar() {
   celular = innerWidth <= 960;
   const pratica = passos[passos.length - 1];
   if (!celular) {
     pratica.style.paddingBottom = "";
-    $(".cena3d").style.setProperty("--escala", clamp((innerHeight * 0.8) / 620, 0.7, 1.3).toFixed(3));
-    return;
+    escala = clamp((innerHeight * 0.8) / 620, 0.7, 1.3);
+  } else {
+    topoTexto = $(".topo").offsetHeight + 4;
+    html.style.setProperty("--topo-texto", `${topoTexto}px`);
+    const alturaTela = palco.clientHeight; // 100svh: não muda com a barra de endereço
+    const texto = Math.max(...conteudos.map((c) => c.offsetHeight));
+    const livre = alturaTela - topoTexto - texto - 20 - 12; // folga entre texto e iPhone, e margem de baixo
+    escala = clamp(livre / 690, 0.3, 0.85); // 690 = 620 do aparelho + folga para a inclinação e a perspectiva
+    // o texto da prática solta junto com o iPhone no fim da jornada
+    pratica.style.paddingBottom = `${Math.max(0, alturaTela - topoTexto - conteudos[conteudos.length - 1].offsetHeight)}px`;
   }
-  topoTexto = $(".topo").offsetHeight + 4;
-  html.style.setProperty("--topo-texto", `${topoTexto}px`);
-  const alturaTela = palco.clientHeight; // 100svh: não muda com a barra de endereço
-  const texto = Math.max(...conteudos.map((c) => c.offsetHeight));
-  const livre = alturaTela - topoTexto - texto - 20 - 12; // folga entre texto e iPhone, e margem de baixo
-  $(".cena3d").style.setProperty("--escala", clamp(livre / 650, 0.3, 0.85).toFixed(3)); // 650 = 620 do aparelho + giro em 3D
-  // o texto da prática solta junto com o iPhone no fim da jornada
-  pratica.style.paddingBottom = `${Math.max(0, alturaTela - topoTexto - conteudos[conteudos.length - 1].offsetHeight)}px`;
+  palco.style.setProperty("--escala", escala.toFixed(3));
+  if (fone) { fone.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala); palco.style.perspective = `${1240 * escala}px`; }
 }
 function passoAtivo() {
   let a = 0;
@@ -197,6 +187,9 @@ function passoAtivo() {
   passos.forEach((p, i) => p.classList.toggle("ativo", !celular || (i === a && !saindo)));
 }
 escalar(); addEventListener("resize", () => { if (!soAltura()) escalar(); });
+criarFone(canvasFone)
+  .then((f) => { fone = f; html.classList.add("fone3d"); escalar(); if (reduzido) quadro(performance.now()); })
+  .catch(() => { canvasFone.remove(); html.classList.add("sem3d"); });
 function poseAtual(t) {
   const meio = innerHeight / 2;
   // posição contínua entre os centros dos passos (0 = topo, 1 = cenas, 2 = prática)
@@ -343,10 +336,18 @@ function quadro(agora) {
   const t = (agora - t0) / 1000;
   if (!reduzido) intro = clamp((t - 0.25) / 1.8);
   const { p, k } = poseAtual(t);
-  iphone.style.transform = `translate3d(0, ${p.y}px, 0) rotateX(${p.rx}deg) rotateY(${p.ry}deg) rotateZ(${p.rz}deg) scale(${p.s})`;
-  frente.style.setProperty("--brilho", `${50 + p.ry * 1.6}%`);
+  if (fone) {
+    const cx = palco.clientWidth / 2, cy = celular ? palco.clientHeight - 22 - 345 * escala : palco.clientHeight / 2;
+    const { frente: de } = fone.quadro(p, cx, cy);
+    iphone.style.transform = transformeTela(288, 604, 620 * escala, p, cx, cy);
+    iphone.style.setProperty("--vis", clamp((de - 0.04) / 0.12).toFixed(2)); // some enquanto o aparelho está de costas
+    const k3 = 620 * escala * p.s / 620;
+    ancora.style.transform = `translate3d(${(cx - 150 * k3).toFixed(1)}px, ${(cy + p.y - 310 * k3).toFixed(1)}px, 0) scale(${k3.toFixed(4)})`;
+  }
+  const seno = Math.sin(p.ry * Math.PI / 180);
+  frente.style.setProperty("--brilho", `${(50 + seno * 40).toFixed(1)}%`);
   sombra.style.setProperty("--sombra", (0.7 + Math.cos(p.ry * Math.PI / 180) * 0.3).toFixed(3));
-  sombra.style.setProperty("--sombra-x", `${(-p.ry * 1.2).toFixed(1)}px`);
+  sombra.style.setProperty("--sombra-x", `${(-seno * 28).toFixed(1)}px`);
   trocarTela(passos[Math.round(k)].dataset.passo);
   passoAtivo();
 
