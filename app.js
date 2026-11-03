@@ -1,6 +1,6 @@
 // Turno. O iPhone acompanha a rolagem até "Na prática" e para ali. Fundo: pontos soltos que viram fios.
 import * as THREE from "three";
-import { criarFone } from "./fone.js";
+import { criarFone, transformeTela } from "./fone.js";
 
 const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const html = document.documentElement;
@@ -177,7 +177,7 @@ function escalar() {
     pratica.style.paddingBottom = `${Math.max(0, alturaTela - topoTexto - conteudos[conteudos.length - 1].offsetHeight)}px`;
   }
   palco.style.setProperty("--escala", escala.toFixed(3));
-  if (fone) { fone.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala); }
+  if (fone) { fone.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala); palco.style.perspective = `${1240 * escala}px`; }
 }
 function passoAtivo() {
   let a = 0;
@@ -187,27 +187,6 @@ function passoAtivo() {
   passos.forEach((p, i) => p.classList.toggle("ativo", !celular || (i === a && !saindo)));
 }
 escalar(); addEventListener("resize", () => { if (!soAltura()) escalar(); });
-// O palco também muda de largura sem "resize" (a barra de rolagem do Windows aparece depois que a
-// página carrega). Sem reajustar, o desenho 3D estica e a tela HTML sai do lugar.
-// ?debug: painel com as medidas, para diagnosticar desalinhamento no computador de quem vê
-if (/debug/.test(location.search)) {
-  const painel = document.createElement("pre");
-  painel.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:9999;margin:0;padding:8px;font:11px/1.35 monospace;background:rgba(0,0,0,.85);color:#7f7;max-width:46vw;white-space:pre-wrap;pointer-events:none";
-  document.body.append(painel);
-  iphone.style.outline = "2px solid cyan";
-  // contorno amarelo: os mesmos cantos desenhados em 2D puro (SVG), sem 3D do CSS
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.style.cssText = "position:absolute;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;overflow:visible";
-  const poli = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-  poli.setAttribute("fill", "none"); poli.setAttribute("stroke", "yellow"); poli.setAttribute("stroke-width", "1.5");
-  svg.append(poli); palco.append(svg);
-  (function laco() { if (fone) poli.setAttribute("points", fone.cantos().map((c) => c.map((n) => n.toFixed(1)).join(",")).join(" ")); requestAnimationFrame(laco); })();
-  const r = (e) => { const b = e.getBoundingClientRect(); return [b.x, b.y, b.width, b.height].map((v) => +v.toFixed(1)); };
-  setInterval(() => {
-    painel.textContent = JSON.stringify({ janela: [innerWidth, innerHeight, devicePixelRatio], doc: document.documentElement.clientWidth, palco: r(palco), palcoCli: [palco.clientWidth, palco.clientHeight], canvas: r(canvasFone), fone: fone?.estado(), escala, iphone: r(iphone), transform: iphone.style.transform.slice(0, 160), nav: navigator.userAgent.replace(/^Mozilla\/5.0 /, "").slice(0, 120) }).replace(/,"/g, ",\n\"");
-  }, 500);
-}
-new ResizeObserver(() => fone?.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala)).observe(palco);
 criarFone(canvasFone)
   .then((f) => { fone = f; html.classList.add("fone3d"); escalar(); if (reduzido) quadro(performance.now()); })
   .catch(() => { canvasFone.remove(); html.classList.add("sem3d"); });
@@ -360,7 +339,7 @@ function quadro(agora) {
   if (fone) {
     const cx = palco.clientWidth / 2, cy = celular ? palco.clientHeight - 22 - 345 * escala : palco.clientHeight / 2;
     const { frente: de } = fone.quadro(p, cx, cy);
-    iphone.style.transform = fone.css(288, 604, p, cx, cy);
+    iphone.style.transform = transformeTela(288, 604, 620 * escala, p, cx, cy);
     iphone.style.setProperty("--vis", clamp((de - 0.04) / 0.12).toFixed(2)); // some enquanto o aparelho está de costas
     const k3 = 620 * escala * p.s / 620;
     ancora.style.transform = `translate3d(${(cx - 150 * k3).toFixed(1)}px, ${(cy + p.y - 310 * k3).toFixed(1)}px, 0) scale(${k3.toFixed(4)})`;

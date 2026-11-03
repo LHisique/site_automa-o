@@ -12,12 +12,9 @@ const EIXO_X = new THREE.Vector3(-0.8022965778, 0.2771029727, -0.5287098862);
 const EIXO_Y = new THREE.Vector3(0.4727748418, 0.8357111984, -0.2794114203);
 const EIXO_Z = new THREE.Vector3(0.3644230374, -0.4741315568, -0.8014955487);
 const ALTURA_ARQUIVO = 1.634;
-// Reserva caso o modelo não tenha a malha da tela: meia-largura, meia-altura e frente do vidro
+// Meia-largura, meia-altura e profundidade do vidro da tela, já com altura do corpo = 1
 const TELA = { x: 0.23032, y: 0.48298, z: 0.02528 };
 // Acabamento do titânio. Troque aqui para outra cor do iPhone.
-// Meia-largura e meia-altura do vidro da frente (o display + a borda preta), medidas no modelo:
-// a tela HTML cobre o vidro todo, até a moldura de titânio, sem faixa preta em volta.
-const VIDRO = { x: 0.235, y: 0.4887 };
 const COR = { moldura: "#aaa69c", fundo: "#8e8a82", logo: "#6f6c66" };
 
 function lerGlb(base64) {
@@ -27,7 +24,6 @@ function lerGlb(base64) {
 }
 
 function acabamento(raiz) {
-  let vidro = null;
   raiz.traverse((o) => {
     if (!o.isMesh) return;
     const m = o.material;
@@ -36,12 +32,11 @@ function acabamento(raiz) {
       case "ana_renk": m.color.set(COR.fundo); m.metalness = 0.6; m.roughness = 0.4; break; // vidro fosco de trás
       case "logo": m.color.set(COR.logo); m.metalness = 1; m.roughness = 0.2; break;
       case "wallpaper": // a tela em si: vidro preto; o conteúdo é o HTML por cima
-        vidro = o; o.material = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.12, metalness: 0 }); break;
+        o.material = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.12, metalness: 0 }); break;
       case "glass": case "cam_materyal": // vidros da câmera, sem transmissão (que pesa muito no celular)
         m.transmission = 0; m.transparent = true; m.opacity = 0.16; m.depthWrite = false; m.roughness = 0.05; m.metalness = 0; m.color.set(0xffffff); break;
     }
   });
-  return vidro;
 }
 
 export async function criarFone(canvas) {
@@ -61,17 +56,12 @@ export async function criarFone(canvas) {
   const recorte = new THREE.DirectionalLight(0xffffff, 1.6); recorte.position.set(2.5, 1.5, -2); cena.add(recorte);
 
   const gltf = await new Promise((ok, erro) => new GLTFLoader().parse(lerGlb(window.IPHONE_GLB), "", ok, erro));
-  const vidro = acabamento(gltf.scene);
+  acabamento(gltf.scene);
   const corpo = new THREE.Group();
   corpo.matrixAutoUpdate = false;
   corpo.matrix.makeBasis(EIXO_X, EIXO_Y, EIXO_Z).invert().premultiply(new THREE.Matrix4().makeScale(1 / ALTURA_ARQUIVO, 1 / ALTURA_ARQUIVO, 1 / ALTURA_ARQUIVO));
   corpo.add(gltf.scene);
   const pivo = new THREE.Group(); pivo.add(corpo); cena.add(pivo);
-  // Onde está a tela, medida no próprio modelo (vértice a vértice): centro, meia-largura,
-  // meia-altura e a frente do vidro. O HTML é encaixado exatamente nesse retângulo.
-  cena.updateMatrixWorld(true);
-  const caixa = vidro && new THREE.Box3().setFromObject(vidro, true), meio = caixa?.getCenter(new THREE.Vector3());
-  const tela = vidro ? { x: (caixa.max.x - caixa.min.x) / 2, y: (caixa.max.y - caixa.min.y) / 2, z: caixa.max.z, cx: meio.x, cy: meio.y } : { ...TELA, cx: 0, cy: 0 };
 
   // Câmera a 2 alturas do aparelho (a mesma perspectiva que o site já tinha). O campo de visão é
   // calculado para que a altura do aparelho na imagem seja exatamente a pedida.
@@ -96,30 +86,17 @@ export async function criarFone(canvas) {
     renderer.render(cena, camera);
     // tela visível só enquanto está virada para a câmera
     normal.set(0, 0, 1).transformDirection(pivo.matrixWorld);
-    centro.set(tela.cx, tela.cy, tela.z).applyMatrix4(pivo.matrixWorld);
+    centro.set(0, 0, TELA.z).applyMatrix4(pivo.matrixWorld);
     const de = camera.position.clone().sub(centro).normalize();
     return { frente: normal.dot(de) };
   }
-  /* Transformação CSS que deita o bloco w×h da tela sobre o vidro do modelo, com a mesma câmera
-     do three.js: perspectiva de 2 alturas centrada no meio do canvas e a mesma ordem de rotações.
-     A perspectiva vai na própria transformação (e não no palco), para não depender de como cada
-     navegador combina perspectiva com position: sticky. */
-  function css(w, h, pose, cx, cy) {
-    const kx = 2 * VIDRO.x * px / w, ky = 2 * VIDRO.y * px / h, f = (n) => n.toFixed(3);
-    return `translate(${f(L / 2)}px,${f(A / 2)}px) perspective(${f(2 * px)}px) translate3d(${f(cx - L / 2)}px,${f(cy + pose.y - A / 2)}px,0) scale(${pose.s}) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) rotateZ(${pose.rz}deg) translate3d(${f(tela.cx * px)}px,${f(-tela.cy * px)}px,${f(tela.z * px)}px) scale(${kx.toFixed(5)},${ky.toFixed(5)}) translate(${-w / 2}px,${-h / 2}px)`;
-  }
-  // ?debug: contorno vermelho onde o modelo diz que a tela está (para comparar com o HTML)
-  if (/debug/.test(location.search)) {
-    const g = new THREE.BufferGeometry().setFromPoints([[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([a, b]) => new THREE.Vector3(tela.cx + a * VIDRO.x, tela.cy + b * VIDRO.y, tela.z + 0.002)));
-    const linha = new THREE.LineLoop(g, new THREE.LineBasicMaterial({ color: 0xff0000, depthTest: false })); linha.renderOrder = 9; pivo.add(linha);
-  }
-  const gl = renderer.getContext(), info = gl.getExtension("WEBGL_debug_renderer_info");
-  const gpu = info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : "?";
-  // cantos da tela projetados pela câmera do three.js, em px do palco (para o contorno 2D do ?debug)
-  const cantos = () => [[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([a, b]) => {
-    v.set(tela.cx + a * VIDRO.x, tela.cy + b * VIDRO.y, tela.z).applyMatrix4(pivo.matrixWorld).project(camera);
-    return [(v.x + 1) / 2 * L, (1 - v.y) / 2 * A];
-  });
-  const estado = () => ({ L, A, px: +px.toFixed(2), buffer: [canvas.width, canvas.height], pr: renderer.getPixelRatio(), gpu: String(gpu).slice(0, 90) });
-  return { ajustar, quadro, css, tela, estado, cantos };
+  return { ajustar, quadro };
+}
+
+/* Transformação CSS que deita o bloco w×h da tela sobre o vidro do modelo. Usa a mesma câmera do
+   three.js: perspectiva de 2 alturas (aplicada pelo app.js no palco) e a mesma ordem de rotações.
+   Não usa matrix3d com divisão por w: o iOS/WebKit nem sempre respeita. */
+export function transformeTela(w, h, px, pose, cx, cy) {
+  const kx = 2 * TELA.x * px / w, ky = 2 * TELA.y * px / h;
+  return `translate3d(${cx.toFixed(2)}px,${(cy + pose.y).toFixed(2)}px,0) scale(${pose.s}) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) rotateZ(${pose.rz}deg) translateZ(${(TELA.z * px).toFixed(2)}px) scale(${kx.toFixed(5)},${ky.toFixed(5)}) translate(${-w / 2}px,${-h / 2}px)`;
 }
