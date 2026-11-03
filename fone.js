@@ -105,5 +105,11 @@ export async function criarFone(canvas) {
     const kx = 2 * tela.x * px / w, ky = 2 * tela.y * px / h, f = (n) => n.toFixed(3);
     return `translate(${f(L / 2)}px,${f(A / 2)}px) perspective(${f(2 * px)}px) translate3d(${f(cx - L / 2)}px,${f(cy + pose.y - A / 2)}px,0) scale(${pose.s}) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) rotateZ(${pose.rz}deg) translate3d(${f(tela.cx * px)}px,${f(-tela.cy * px)}px,${f(tela.z * px)}px) scale(${kx.toFixed(5)},${ky.toFixed(5)}) translate(${-w / 2}px,${-h / 2}px)`;
   }
-  return { ajustar, quadro, css, tela };
+  // ?debug: contorno vermelho onde o modelo diz que a tela está (para comparar com o HTML)
+  if (/debug/.test(location.search)) {
+    const g = new THREE.BufferGeometry().setFromPoints([[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([a, b]) => new THREE.Vector3(tela.cx + a * tela.x, tela.cy + b * tela.y, tela.z + 0.002)));
+    const linha = new THREE.LineLoop(g, new THREE.LineBasicMaterial({ color: 0xff0000, depthTest: false })); linha.renderOrder = 9; pivo.add(linha);
+  }
+  const estado = () => ({ L, A, px: +px.toFixed(2), buffer: [canvas.width, canvas.height], pr: renderer.getPixelRatio() });
+  return { ajustar, quadro, css, tela, estado };
 }
