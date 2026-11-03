@@ -97,12 +97,13 @@ export async function criarFone(canvas) {
     const de = camera.position.clone().sub(centro).normalize();
     return { frente: normal.dot(de) };
   }
-  /* Transformação CSS que deita o bloco w×h da tela sobre o vidro do modelo. Usa a mesma câmera
-     do three.js: perspectiva de 2 alturas (aplicada pelo app.js no palco) e a mesma ordem de
-     rotações. Não usa matrix3d com divisão por w: o iOS/WebKit nem sempre respeita. */
+  /* Transformação CSS que deita o bloco w×h da tela sobre o vidro do modelo, com a mesma câmera
+     do three.js: perspectiva de 2 alturas centrada no meio do canvas e a mesma ordem de rotações.
+     A perspectiva vai na própria transformação (e não no palco), para não depender de como cada
+     navegador combina perspectiva com position: sticky. */
   function css(w, h, pose, cx, cy) {
-    const kx = 2 * tela.x * px / w, ky = 2 * tela.y * px / h;
-    return `translate3d(${cx.toFixed(2)}px,${(cy + pose.y).toFixed(2)}px,0) scale(${pose.s}) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) rotateZ(${pose.rz}deg) translate3d(${(tela.cx * px).toFixed(2)}px,${(-tela.cy * px).toFixed(2)}px,${(tela.z * px).toFixed(2)}px) scale(${kx.toFixed(5)},${ky.toFixed(5)}) translate(${-w / 2}px,${-h / 2}px)`;
+    const kx = 2 * tela.x * px / w, ky = 2 * tela.y * px / h, f = (n) => n.toFixed(3);
+    return `translate(${f(L / 2)}px,${f(A / 2)}px) perspective(${f(2 * px)}px) translate3d(${f(cx - L / 2)}px,${f(cy + pose.y - A / 2)}px,0) scale(${pose.s}) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) rotateZ(${pose.rz}deg) translate3d(${f(tela.cx * px)}px,${f(-tela.cy * px)}px,${f(tela.z * px)}px) scale(${kx.toFixed(5)},${ky.toFixed(5)}) translate(${-w / 2}px,${-h / 2}px)`;
   }
   return { ajustar, quadro, css, tela };
 }
