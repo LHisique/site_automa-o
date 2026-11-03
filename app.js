@@ -189,6 +189,17 @@ function passoAtivo() {
 escalar(); addEventListener("resize", () => { if (!soAltura()) escalar(); });
 // O palco também muda de largura sem "resize" (a barra de rolagem do Windows aparece depois que a
 // página carrega). Sem reajustar, o desenho 3D estica e a tela HTML sai do lugar.
+// ?debug: painel com as medidas, para diagnosticar desalinhamento no computador de quem vê
+if (/debug/.test(location.search)) {
+  const painel = document.createElement("pre");
+  painel.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:9999;margin:0;padding:8px;font:11px/1.35 monospace;background:rgba(0,0,0,.85);color:#7f7;max-width:46vw;white-space:pre-wrap;pointer-events:none";
+  document.body.append(painel);
+  iphone.style.outline = "2px solid cyan";
+  const r = (e) => { const b = e.getBoundingClientRect(); return [b.x, b.y, b.width, b.height].map((v) => +v.toFixed(1)); };
+  setInterval(() => {
+    painel.textContent = JSON.stringify({ janela: [innerWidth, innerHeight, devicePixelRatio], doc: document.documentElement.clientWidth, palco: r(palco), palcoCli: [palco.clientWidth, palco.clientHeight], canvas: r(canvasFone), fone: fone?.estado(), escala, iphone: r(iphone), transform: iphone.style.transform.slice(0, 160), nav: navigator.userAgent.replace(/^Mozilla\/5.0 /, "").slice(0, 120) }).replace(/,"/g, ",\n\"");
+  }, 500);
+}
 new ResizeObserver(() => fone?.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala)).observe(palco);
 criarFone(canvasFone)
   .then((f) => { fone = f; html.classList.add("fone3d"); escalar(); if (reduzido) quadro(performance.now()); })
