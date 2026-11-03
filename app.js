@@ -177,7 +177,7 @@ function escalar() {
     pratica.style.paddingBottom = `${Math.max(0, alturaTela - topoTexto - conteudos[conteudos.length - 1].offsetHeight)}px`;
   }
   palco.style.setProperty("--escala", escala.toFixed(3));
-  if (fone) { fone.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala); palco.style.perspective = `${1240 * escala}px`; }
+  if (fone) { fone.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala); }
 }
 function passoAtivo() {
   let a = 0;
