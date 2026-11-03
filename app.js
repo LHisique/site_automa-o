@@ -1,6 +1,6 @@
 // Turno. O iPhone acompanha a rolagem até "Na prática" e para ali. Fundo: pontos soltos que viram fios.
 import * as THREE from "three";
-import { criarFone, transformeTela } from "./fone.js";
+import { criarFone } from "./fone.js";
 
 const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const html = document.documentElement;
@@ -187,6 +187,9 @@ function passoAtivo() {
   passos.forEach((p, i) => p.classList.toggle("ativo", !celular || (i === a && !saindo)));
 }
 escalar(); addEventListener("resize", () => { if (!soAltura()) escalar(); });
+// O palco também muda de largura sem "resize" (a barra de rolagem do Windows aparece depois que a
+// página carrega). Sem reajustar, o desenho 3D estica e a tela HTML sai do lugar.
+new ResizeObserver(() => fone?.ajustar(palco.clientWidth, palco.clientHeight, 620 * escala)).observe(palco);
 criarFone(canvasFone)
   .then((f) => { fone = f; html.classList.add("fone3d"); escalar(); if (reduzido) quadro(performance.now()); })
   .catch(() => { canvasFone.remove(); html.classList.add("sem3d"); });
@@ -339,7 +342,7 @@ function quadro(agora) {
   if (fone) {
     const cx = palco.clientWidth / 2, cy = celular ? palco.clientHeight - 22 - 345 * escala : palco.clientHeight / 2;
     const { frente: de } = fone.quadro(p, cx, cy);
-    iphone.style.transform = transformeTela(288, 604, 620 * escala, p, cx, cy);
+    iphone.style.transform = fone.css(288, 604, p, cx, cy);
     iphone.style.setProperty("--vis", clamp((de - 0.04) / 0.12).toFixed(2)); // some enquanto o aparelho está de costas
     const k3 = 620 * escala * p.s / 620;
     ancora.style.transform = `translate3d(${(cx - 150 * k3).toFixed(1)}px, ${(cy + p.y - 310 * k3).toFixed(1)}px, 0) scale(${k3.toFixed(4)})`;
