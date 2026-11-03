@@ -74,13 +74,12 @@ main, .rodape { position: relative; z-index: 1; }
 /* Topo */
 .topo { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; gap: 28px; padding: 18px var(--margem); }
 .topo::before { content: ""; position: absolute; inset: 0 0 -24px; z-index: -1; background: linear-gradient(var(--fundo) 30%, transparent); pointer-events: none; }
-.marca { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font: 700 26px/1 var(--display); letter-spacing: -.05em; }
-.marca-anel { width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid var(--acento); border-right-color: transparent; position: relative; animation: girar 6s linear infinite; }
+.marca { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font: 700 34px/1 var(--display); letter-spacing: -.05em; }
+.marca-anel { width: 29px; height: 29px; border-radius: 50%; border: 3px solid var(--acento); border-right-color: transparent; position: relative; animation: girar 6s linear infinite; }
 .marca-anel::after { content: ""; position: absolute; top: -4px; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--acento); }
 @keyframes girar { to { transform: rotate(360deg); } }
-.topo-turno { margin: 0 auto 0 0; display: flex; align-items: center; gap: 10px; font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-suave); }
 .relogio { font-variant-numeric: tabular-nums; color: var(--tinta); }
-.topo-nav { display: flex; gap: 32px; font: 500 14px/1 var(--sans); }
+.topo-nav { margin-left: auto; display: flex; gap: 32px; font: 500 14px/1 var(--sans); }
 .topo-nav a { text-decoration: none; position: relative; }
 .topo-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .45s var(--ease); }
 .topo-nav a:hover::after { transform: scaleX(1); transform-origin: left; }
@@ -301,7 +300,7 @@ input:focus, textarea:focus { outline: none; border-bottom-color: var(--acento);
 @media (max-width: 960px) {
   body { font-size: 17px; }
   .topo { gap: 12px; }
-  .topo-nav, .botao-topo, .topo-turno { display: none; }
+  .topo-nav, .botao-topo { display: none; }
   .topo-menu { display: block; margin-left: auto; }
   .jornada { grid-template-columns: minmax(0, 1fr); }
   .palco, .passos-jornada { grid-column: 1; grid-row: 1; }

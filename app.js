@@ -11,10 +11,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const suave = (t) => t * t * (3 - 2 * t);
 const WHATSAPP = "5518991919081";
 
-/* ---------- Relógio do "turno ativo" ---------- */
-const relogio = $(".topo .relogio");
-const hora = () => (relogio.textContent = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
-hora(); setInterval(hora, 15000);
+/* ---------- Relógio da tela do celular ---------- */
 const relogioTela = $(".status .relogio");
 relogioTela.textContent = "23:48";
 
