@@ -8,7 +8,7 @@ Abra `index.html` no navegador.
 |---|---|
 | Número de WhatsApp | `WHATSAPP` no topo de `app.js` e o link `wa.me` em `index.html` |
 | E-mail | `index.html` (contato) e `privacidade.html` |
-| CPF e hospedagem (Netlify) | `privacidade.html` |
+| CPF e hospedagem (GitHub Pages) | `privacidade.html` |
 | Conversas do celular | `index.html`: cada `<ol class="chat">` dentro do iPhone |
 | Poses do iPhone na rolagem | objeto `poses` em `app.js` (`ry` acumula: uma volta inteira da abertura à tela de bloqueio) |
 | iPhone 3D | `fone.js`; cor do titânio na constante `COR`; modelo embutido em `assets/iphone-glb.js` |
