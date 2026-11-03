@@ -96,8 +96,7 @@ export async function criarFone(canvas) {
 /* Transformação CSS que deita o bloco w×h da tela sobre o vidro do modelo. Usa a mesma câmera do
    three.js: perspectiva de 2 alturas (aplicada pelo app.js no palco) e a mesma ordem de rotações.
    Não usa matrix3d com divisão por w: o iOS/WebKit nem sempre respeita. */
-// 1.025: o vidro do modelo é um pouco maior que a área medida da tela; sem isso sobra uma faixa preta
 export function transformeTela(w, h, px, pose, cx, cy) {
-  const kx = 1.025 * 2 * TELA.x * px / w, ky = 1.025 * 2 * TELA.y * px / h;
+  const kx = 2 * TELA.x * px / w, ky = 2 * TELA.y * px / h;
   return `translate3d(${cx.toFixed(2)}px,${(cy + pose.y).toFixed(2)}px,0) scale(${pose.s}) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) rotateZ(${pose.rz}deg) translateZ(${(TELA.z * px).toFixed(2)}px) scale(${kx.toFixed(5)},${ky.toFixed(5)}) translate(${-w / 2}px,${-h / 2}px)`;
 }
