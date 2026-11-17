@@ -85,9 +85,12 @@ main, .rodape { position: relative; z-index: 1; }
 .topo-nav a:hover::after { transform: scaleX(1); transform-origin: left; }
 .botao-topo { padding: 12px 20px; font-size: 14px; }
 .topo-menu { display: none; background: none; border: 1px solid var(--tinta); color: var(--tinta); border-radius: 999px; padding: 10px 18px; font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
-.menu-celular { position: fixed; inset: 0; z-index: 45; background: var(--fundo); display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 0 var(--margem); }
+.menu-celular { position: fixed; inset: 0; z-index: 45; background: var(--fundo); display: flex; flex-direction: column; justify-content: flex-start; gap: 0; padding: 96px var(--margem) 32px; overflow-y: auto; overscroll-behavior: contain; animation: menu-entra .25s var(--ease); }
+@keyframes menu-entra { from { opacity: 0; } }
 .menu-celular[hidden] { display: none; }
-.menu-celular a { font: 600 48px/1.15 var(--display); letter-spacing: -.04em; text-decoration: none; }
+.menu-celular a { font: 600 clamp(32px, 9vw, 44px)/1.1 var(--display); letter-spacing: -.04em; text-decoration: none; padding: 18px 0; border-bottom: 1px solid var(--linha); }
+.menu-celular a:last-child { border-bottom: 0; color: var(--acento); }
+@media (min-width: 961px) { .menu-celular { display: none !important; } }
 
 /* ---------- Jornada com o iPhone ---------- */
 .jornada { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }

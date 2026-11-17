@@ -26,6 +26,8 @@ function menuAberto(abrir) {
   abrir ? lenis?.stop() : lenis?.start();
 }
 menuBotao.addEventListener("click", () => menuAberto(menu.hidden));
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) menuAberto(false); });
+matchMedia("(min-width: 961px)").addEventListener("change", (m) => { if (m.matches && !menu.hidden) menuAberto(false); });
 document.addEventListener("click", (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
